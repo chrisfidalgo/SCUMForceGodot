@@ -1,0 +1,247 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/combat/projectile_test.gd" id="1_test"]
+[ext_resource type="Script" path="res://scenes/combat/attack_spawner.gd" id="2_spawner"]
+[ext_resource type="Script" path="res://scenes/combat/test_hurtbox.gd" id="3_hurtbox"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(14, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
+size = Vector2(20, 70)
+
+[node name="ProjectileTest" type="Node2D"]
+script = ExtResource("1_test")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(320, 180)
+current = true
+
+[node name="AttackSpawner" type="Node" parent="."]
+script = ExtResource("2_spawner")
+
+[node name="LaneGround" type="Node2D" parent="."]
+
+[node name="Origin" type="Marker2D" parent="LaneGround"]
+position = Vector2(80, 300)
+
+[node name="Dummy" type="Area2D" parent="LaneGround"]
+position = Vector2(80, 140)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("3_hurtbox")
+label_text = "GROUND (hurt_low)"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LaneGround/Dummy"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Visual" type="Polygon2D" parent="LaneGround/Dummy"]
+color = Color(1, 0.6, 0.2, 1)
+polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+
+[node name="Label" type="Label" parent="LaneGround/Dummy"]
+position = Vector2(-40, 10)
+size = Vector2(80, 30)
+horizontal_alignment = 1
+
+[node name="LaneElevated" type="Node2D" parent="."]
+
+[node name="Origin" type="Marker2D" parent="LaneElevated"]
+position = Vector2(190, 300)
+
+[node name="Dummy" type="Area2D" parent="LaneElevated"]
+position = Vector2(190, 140)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("3_hurtbox")
+label_text = "ELEVATED (hurt_high)"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LaneElevated/Dummy"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Visual" type="Polygon2D" parent="LaneElevated/Dummy"]
+color = Color(0.2, 0.5, 1, 1)
+polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+
+[node name="Label" type="Label" parent="LaneElevated/Dummy"]
+position = Vector2(-40, 10)
+size = Vector2(80, 30)
+horizontal_alignment = 1
+
+[node name="LaneTall" type="Node2D" parent="."]
+
+[node name="Origin" type="Marker2D" parent="LaneTall"]
+position = Vector2(300, 300)
+
+[node name="Dummy" type="Area2D" parent="LaneTall"]
+position = Vector2(300, 140)
+collision_layer = 24
+collision_mask = 0
+script = ExtResource("3_hurtbox")
+label_text = "TALL (hurt_low+high)"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LaneTall/Dummy"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Visual" type="Polygon2D" parent="LaneTall/Dummy"]
+color = Color(0.6, 0.2, 0.8, 1)
+polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+
+[node name="Label" type="Label" parent="LaneTall/Dummy"]
+position = Vector2(-40, 10)
+size = Vector2(80, 30)
+horizontal_alignment = 1
+
+[node name="LaneLowWall" type="Node2D" parent="."]
+
+[node name="Origin" type="Marker2D" parent="LaneLowWall"]
+position = Vector2(410, 300)
+
+[node name="Wall" type="Area2D" parent="LaneLowWall"]
+position = Vector2(410, 220)
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LaneLowWall/Wall"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="Visual" type="Polygon2D" parent="LaneLowWall/Wall"]
+color = Color(0.55, 0.4, 0.25, 1)
+polygon = PackedVector2Array(-10, -35, 10, -35, 10, 35, -10, 35)
+
+[node name="Label" type="Label" parent="LaneLowWall/Wall"]
+position = Vector2(-40, -50)
+size = Vector2(80, 16)
+horizontal_alignment = 1
+text = "LOW WALL (block_low)"
+
+[node name="Dummy" type="Area2D" parent="LaneLowWall"]
+position = Vector2(410, 140)
+collision_layer = 24
+collision_mask = 0
+script = ExtResource("3_hurtbox")
+label_text = "TALL, behind LOW wall"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LaneLowWall/Dummy"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Visual" type="Polygon2D" parent="LaneLowWall/Dummy"]
+color = Color(0.6, 0.2, 0.8, 1)
+polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+
+[node name="Label" type="Label" parent="LaneLowWall/Dummy"]
+position = Vector2(-40, 10)
+size = Vector2(80, 30)
+horizontal_alignment = 1
+
+[node name="LaneTallWall" type="Node2D" parent="."]
+
+[node name="Origin" type="Marker2D" parent="LaneTallWall"]
+position = Vector2(520, 300)
+
+[node name="Wall" type="Area2D" parent="LaneTallWall"]
+position = Vector2(520, 220)
+collision_layer = 96
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LaneTallWall/Wall"]
+shape = SubResource("RectangleShape2D_wall")
+
+[node name="Visual" type="Polygon2D" parent="LaneTallWall/Wall"]
+color = Color(0.3, 0.3, 0.3, 1)
+polygon = PackedVector2Array(-10, -35, 10, -35, 10, 35, -10, 35)
+
+[node name="Label" type="Label" parent="LaneTallWall/Wall"]
+position = Vector2(-40, -50)
+size = Vector2(80, 16)
+horizontal_alignment = 1
+text = "TALL WALL (block_low+high)"
+
+[node name="Dummy" type="Area2D" parent="LaneTallWall"]
+position = Vector2(520, 140)
+collision_layer = 24
+collision_mask = 0
+script = ExtResource("3_hurtbox")
+label_text = "TALL, behind TALL wall"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LaneTallWall/Dummy"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Visual" type="Polygon2D" parent="LaneTallWall/Dummy"]
+color = Color(0.6, 0.2, 0.8, 1)
+polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+
+[node name="Label" type="Label" parent="LaneTallWall/Dummy"]
+position = Vector2(-40, 10)
+size = Vector2(80, 30)
+horizontal_alignment = 1
+
+[node name="BurstCluster" type="Node2D" parent="."]
+
+[node name="Origin" type="Marker2D" parent="BurstCluster"]
+position = Vector2(600, 220)
+
+[node name="NearGround" type="Area2D" parent="BurstCluster"]
+position = Vector2(620, 220)
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("3_hurtbox")
+label_text = "burst: ground 20px"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BurstCluster/NearGround"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Visual" type="Polygon2D" parent="BurstCluster/NearGround"]
+color = Color(1, 0.6, 0.2, 1)
+polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+
+[node name="Label" type="Label" parent="BurstCluster/NearGround"]
+position = Vector2(-60, 10)
+size = Vector2(100, 30)
+horizontal_alignment = 1
+
+[node name="NearElevated" type="Area2D" parent="BurstCluster"]
+position = Vector2(600, 180)
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("3_hurtbox")
+label_text = "burst: elevated 40px"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BurstCluster/NearElevated"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Visual" type="Polygon2D" parent="BurstCluster/NearElevated"]
+color = Color(0.2, 0.5, 1, 1)
+polygon = PackedVector2Array(-7, -7, 7, -7, 7, 7, -7, 7)
+
+[node name="Label" type="Label" parent="BurstCluster/NearElevated"]
+position = Vector2(-60, -30)
+size = Vector2(100, 30)
+horizontal_alignment = 1
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Instructions" type="Label" parent="UI"]
+position = Vector2(8, 4)
+size = Vector2(624, 14)
+text = "Keys 1-4 (or buttons) fire each attack down every lane at once. Watch hit counters under each dummy."
+
+[node name="ButtonTPRoll" type="Button" parent="UI"]
+position = Vector2(8, 20)
+size = Vector2(150, 20)
+text = "1: TP Roll (LOW)"
+
+[node name="ButtonLongToss" type="Button" parent="UI"]
+position = Vector2(162, 20)
+size = Vector2(160, 20)
+text = "2: Long Toss (HIGH)"
+
+[node name="ButtonCheeseWheel" type="Button" parent="UI"]
+position = Vector2(326, 20)
+size = Vector2(170, 20)
+text = "3: Cheese Wheel (BOTH)"
+
+[node name="ButtonRindSlam" type="Button" parent="UI"]
+position = Vector2(500, 20)
+size = Vector2(132, 20)
+text = "4: Rind Slam (burst)"
