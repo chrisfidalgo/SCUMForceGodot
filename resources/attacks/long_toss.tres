@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AttackDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/attack_def.gd" id="1_attackdef"]
+
+[resource]
+script = ExtResource("1_attackdef")
+aim_type = 2
+cone_degrees = 120.0
+channel = 1
+damage_half_hearts = 2
+cooldown_sec = 1.2
+projectile_speed = 260.0
+range_px = 200.0
