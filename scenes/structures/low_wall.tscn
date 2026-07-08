@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_low_wall"]
+size = Vector2(56, 20)
+
+[node name="LowWall" type="StaticBody2D"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visual" type="ColorRect" parent="."]
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -10.0
+offset_right = 28.0
+offset_bottom = 10.0
+color = Color(0.55, 0.4, 0.22, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_low_wall")
+
+[node name="BlockLow" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BlockLow"]
+shape = SubResource("RectangleShape2D_low_wall")

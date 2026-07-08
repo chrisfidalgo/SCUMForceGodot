@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/structures/exit_zone.gd" id="1_exit_zone"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_exit_zone"]
+size = Vector2(120, 40)
+
+[node name="ExitZone" type="Area2D"]
+collision_layer = 128
+collision_mask = 2
+script = ExtResource("1_exit_zone")
+
+[node name="Visual" type="ColorRect" parent="."]
+mouse_filter = 2
+offset_left = -60.0
+offset_top = -20.0
+offset_right = 60.0
+offset_bottom = 20.0
+color = Color(0.25, 0.85, 0.4, 0.35)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_exit_zone")
