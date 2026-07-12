@@ -1,9 +1,11 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scenes/combat/projectile.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/projectiles/tp.png" id="2_roll"]
+[ext_resource type="Texture2D" path="res://assets/sprites/projectiles/tp-trail.png" id="3_tail"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1"]
-radius = 4.0
+radius = 3.0
 
 [node name="Projectile" type="Area2D"]
 collision_layer = 0
@@ -14,3 +16,11 @@ script = ExtResource("1_script")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_1")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Tail" type="Sprite2D" parent="Visual"]
+texture = ExtResource("3_tail")
+
+[node name="Roll" type="Sprite2D" parent="Visual"]
+texture = ExtResource("2_roll")

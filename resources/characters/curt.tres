@@ -6,7 +6,7 @@
 
 [resource]
 script = ExtResource("1_chardef")
-display_name = "Curt \"Curly\""
+display_name = "Curly"
 move_speed = 90.0
 max_half_hearts = 8
 primary_attack = ExtResource("2_primary")

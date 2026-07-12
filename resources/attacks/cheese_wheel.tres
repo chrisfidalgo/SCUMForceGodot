@@ -4,8 +4,8 @@
 
 [resource]
 script = ExtResource("1_attackdef")
-aim_type = 2
-cone_degrees = 90.0
+height_profile = 0
+lateral_motion = 0
 channel = 2
 damage_half_hearts = 2
 cooldown_sec = 0.8

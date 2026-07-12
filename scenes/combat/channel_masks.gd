@@ -41,6 +41,22 @@ static func mask_for_channel(channel: AttackDef.Channel) -> int:
 			push_error("ChannelMasks.mask_for_channel: unknown channel %s" % channel)
 			return 0
 
+## --- Height → channel (04-COMBAT-MODEL.md §2) -------------------------------
+## A projectile carries a `height` scalar (elevation units, 0 = ground). These
+## two thresholds slice that continuum into the three channels. Tune by feel:
+## widening the HIGH band makes lobs clear walls more easily; a small GROUND
+## band means a lob is only "low enough to hit the ground" right at launch/landing.
+const HEIGHT_GROUND_MAX := 3.0   ## height < this  → LOW  (at/near the floor)
+const HEIGHT_HIGH_MIN := 10.0    ## height >= this → HIGH (up where it clears low walls)
+                                 ## in between      → BOTH (transitioning)
+
+static func channel_for_height(height: float) -> AttackDef.Channel:
+	if height < HEIGHT_GROUND_MAX:
+		return AttackDef.Channel.LOW
+	elif height < HEIGHT_HIGH_MIN:
+		return AttackDef.Channel.BOTH
+	return AttackDef.Channel.HIGH
+
 ## Cosmetic only — matches the F5 channel-overlay colors from 03-GYM-SPEC.md
 ## §5 (LOW = orange, HIGH = blue, BOTH = purple) so projectiles read the same
 ## way the overlay will. Used by Projectile's debug draw.

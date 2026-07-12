@@ -4,10 +4,11 @@
 
 [resource]
 script = ExtResource("1_attackdef")
-aim_type = 2
-cone_degrees = 120.0
-channel = 1
+height_profile = 1
+lob_peak_height = 16.0
+lateral_motion = 0
+channel = 0
 damage_half_hearts = 2
 cooldown_sec = 1.2
-projectile_speed = 260.0
-range_px = 200.0
+projectile_speed = 200.0
+range_px = 260.0

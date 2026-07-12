@@ -104,10 +104,10 @@ position = Vector2(320, 328)
 [node name="Structures" type="Node2D" parent="."]
 
 [node name="LowWall" parent="Structures" instance=ExtResource("3_low_wall")]
-position = Vector2(110, 100)
+position = Vector2(110, 130)
 
 [node name="TallWall" parent="Structures" instance=ExtResource("4_tall_wall")]
-position = Vector2(110, 260)
+position = Vector2(210, 80)
 
 [node name="Platform" parent="Structures" instance=ExtResource("5_platform")]
 position = Vector2(260, 180)
@@ -124,6 +124,9 @@ position = Vector2(420, 180)
 [node name="DummyTall" parent="Dummies" instance=ExtResource("6_target_dummy")]
 position = Vector2(540, 180)
 elevation = 2
+
+[node name="DummyBehindLowWall" parent="Dummies" instance=ExtResource("6_target_dummy")]
+position = Vector2(110, 80)
 
 [node name="AttackSpawner" type="Node" parent="."]
 script = ExtResource("8_spawner")
