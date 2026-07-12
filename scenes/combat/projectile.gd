@@ -57,9 +57,23 @@ func _physics_process(delta: float) -> void:
 func _on_area_entered(area: Area2D) -> void:
 	if _is_ignored(area):
 		return
-	if area.has_method("receive_hit"):
-		area.receive_hit(_damage_half_hearts)
+	var target: Object = _resolve_hurt_target(area)
+	if target != null:
+		target.receive_hit(_damage_half_hearts)
 	queue_free()
+
+## A hurtbox may carry receive_hit() on the Area2D itself, or (the common Godot
+## pattern) be a scriptless Area2D child whose owning entity carries it. Resolve
+## either. Anything with no receive_hit anywhere is a blocker — we still expire.
+func _resolve_hurt_target(area: Area2D) -> Object:
+	if area.has_method("receive_hit"):
+		return area
+	if area.owner != null and area.owner.has_method("receive_hit"):
+		return area.owner
+	var parent: Node = area.get_parent()
+	if parent != null and parent.has_method("receive_hit"):
+		return parent
+	return null
 
 func _is_ignored(area: Area2D) -> bool:
 	if _ignore_node == null:

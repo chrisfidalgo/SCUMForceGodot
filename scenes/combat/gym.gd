@@ -1,8 +1,23 @@
 extends Node2D
-## gym.gd — the combat-testing arena (empty shell for Phase 0).
+## gym.gd — the combat-testing arena, and the seam where the three Phase-1
+## packets meet (integration pass 1).
 ##
-## Phase 0 ships this scene deliberately near-empty: a Node2D root and a fixed
-## Camera2D at the arena center (the combat camera never follows the player —
-## 02-ARCHITECTURE.md §2). Packet P1b builds the actual layout inside gym.tscn
-## (floor, arena walls, structure sampler, dummy row); P1a/P1c add the player
-## and attacks. It must always open and run standalone (F5) — see 03-GYM-SPEC.md.
+## The scene assembles the pieces built by the parallel packets:
+##   • Player (P1a)        — WASD/mouse controller that emits `attack_fired`.
+##   • AttackSpawner (P1c) — turns a fired AttackDef into a projectile/burst.
+##   • Structures & dummies (P1b) — the channel/elevation test targets.
+##
+## The only wiring the arena itself owns is routing the player's fire signal to
+## the spawner. Doing it here (rather than the player reaching for the spawner,
+## or vice-versa) keeps both packets decoupled: the player announces "I fired,"
+## and this arena decides that, in the gym, firing means "ask the spawner to
+## spawn it, crediting the player as the source so it can't hit itself."
+
+@onready var _player: Player = $Player
+@onready var _spawner: AttackSpawner = $AttackSpawner
+
+func _ready() -> void:
+	_player.attack_fired.connect(_on_player_attack_fired)
+
+func _on_player_attack_fired(attack: AttackDef, origin: Vector2, aim_direction: Vector2) -> void:
+	_spawner.spawn_attack(attack, origin, aim_direction, _player)

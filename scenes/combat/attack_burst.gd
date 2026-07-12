@@ -47,6 +47,19 @@ func _on_area_entered(area: Area2D) -> void:
 		return
 	if _ignore_node != null and (area == _ignore_node or _ignore_node.is_ancestor_of(area)):
 		return
-	if area.has_method("receive_hit"):
+	var target: Object = _resolve_hurt_target(area)
+	if target != null:
 		_hit_areas.append(area)
-		area.receive_hit(_damage_half_hearts)
+		target.receive_hit(_damage_half_hearts)
+
+## Matches Projectile._resolve_hurt_target: receive_hit may live on the Area2D
+## or on the entity that owns it. Blockers (no receive_hit anywhere) are ignored.
+func _resolve_hurt_target(area: Area2D) -> Object:
+	if area.has_method("receive_hit"):
+		return area
+	if area.owner != null and area.owner.has_method("receive_hit"):
+		return area.owner
+	var parent: Node = area.get_parent()
+	if parent != null and parent.has_method("receive_hit"):
+		return parent
+	return null

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scenes/combat/gym.gd" id="1_gym"]
 [ext_resource type="PackedScene" path="res://scenes/structures/exit_zone.tscn" id="2_exit_zone"]
@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" path="res://scenes/structures/tall_wall.tscn" id="4_tall_wall"]
 [ext_resource type="PackedScene" path="res://scenes/structures/platform.tscn" id="5_platform"]
 [ext_resource type="PackedScene" path="res://scenes/enemies/target_dummy.tscn" id="6_target_dummy"]
+[ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="7_player"]
+[ext_resource type="Script" path="res://scenes/combat/attack_spawner.gd" id="8_spawner"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h_wall"]
 size = Vector2(640, 16)
@@ -122,3 +124,9 @@ position = Vector2(420, 180)
 [node name="DummyTall" parent="Dummies" instance=ExtResource("6_target_dummy")]
 position = Vector2(540, 180)
 elevation = 2
+
+[node name="AttackSpawner" type="Node" parent="."]
+script = ExtResource("8_spawner")
+
+[node name="Player" parent="." instance=ExtResource("7_player")]
+position = Vector2(320, 328)
