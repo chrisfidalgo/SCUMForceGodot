@@ -76,6 +76,8 @@ This is the game's identity, expressed in Godot's 2D physics layers (named in Pr
 
 ## 5. Data-driven characters & attacks (custom Resources)
 
+> **Superseded (attacks):** the `AttackDef` fields below are replaced by the v2 model in [`04-COMBAT-MODEL.md`](04-COMBAT-MODEL.md) §3 (height profile / lateral motion / wall behavior / on-hit effect). `CharacterDef` and the resource-driven approach still stand.
+
 Custom `Resource` classes are Godot's designer-facing data assets: they appear as editable `.tres` files whose fields show up in the Inspector. **All character and attack tuning lives here** — this is where the owner does balance work without touching code.
 
 ```
@@ -108,6 +110,8 @@ One generic player controller reads a `CharacterDef`; characters differ by data,
 - **Continue:** Splash checks for a valid `save_run.json`; loading rebuilds `RunState` and routes to EraMap.
 
 ## 7. Input Map (defined once in Phase 0, then frozen)
+
+> **Superseded (controls):** the cursor-facing / mouse-attack model here is replaced by the 8-way-gated, keyboard **+ controller** model in [`04-COMBAT-MODEL.md`](04-COMBAT-MODEL.md) §1. Facing derives from movement, not the mouse.
 
 | Action | Bindings |
 |---|---|

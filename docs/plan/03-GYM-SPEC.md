@@ -16,6 +16,8 @@ One 640×360 arena, fixed camera at center, plain placeholder-tile floor with ar
 
 ## 2. The two characters
 
+> **Superseded:** the kits and aim types here are replaced by [`04-COMBAT-MODEL.md`](04-COMBAT-MODEL.md) §4 (starters Johnny Cool / Curly / Scum; no cursor cone). Retained for history.
+
 Both are driven by the same generic player controller reading a `CharacterDef` resource. The pair deliberately covers **all three aim types** and **all three channels** between four attacks — that's the coverage the gym must demonstrate.
 
 ### Johnny "Weenie" — fast and fragile (assassin archetype)
