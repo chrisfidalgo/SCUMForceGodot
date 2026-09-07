@@ -6,10 +6,10 @@
 script = ExtResource("1_attackdef")
 height_profile = 0
 lateral_motion = 1
-sine_amplitude_px = 4.0
-sine_wavelength_px = 36.0
+sine_amplitude_px = 6.0
+sine_wavelength_px = 50.0
 channel = 0
 damage_half_hearts = 1
-cooldown_sec = 0.25
-projectile_speed = 320.0
-range_px = 240.0
+cooldown_sec = 1.25
+projectile_speed = 110.0
+range_px = 145.0

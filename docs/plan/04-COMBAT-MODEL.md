@@ -46,7 +46,7 @@ Player-facing handles (real names in parentheses). Each starter answers both hig
 - **Primary — TP Roll:** forward, LOW, `SINE` lateral wiggle. Art: `tp.png` roll + cosmetic `tp-trail.png` tail trailing behind. No standout effect — but the wiggle gives extra chances to clip ground enemies, and Johnny is the fastest character.
 - **Secondary — TP Lob:** `STRAIGHT` `LOB` (high throw, no wiggle), `tp.png`, oval shadow. Clears low walls to strike ground targets beyond.
 
-### Curly (Curt) — control/slow, tanky
+### Curt — control/slow, tanky
 - **Primary — Bleu Cheese Packet:** forward, LOW, `bleu-cheese.png`. On enemy hit → `SLOW_FIELD`: a small ground slow area (~shadow-sized, ~0.5–1 s), shown as a cream oval.
 - **Secondary — Bleu Cheese Container Lob:** `LOB`, `bleu-cheese.png` container. On impact → `AREA_SPILL`: play the 9-frame `bleu-cheese-explosion.png`, then a **wider, longer-lasting** cream slow-oval that scales up then fades.
 - **Role:** best against fast-moving enemies (he can slow them).
@@ -61,8 +61,8 @@ WIP art (`stanley.png` is oversized for this resolution and needs a downscale). 
 
 ## 5. Naming & art notes
 
-- Handles: **Johnny Cool**, **Curly**, **Scum** (this supersedes the earlier "Johnny Weenie"). Real names Johnny / Curt / Gary.
-- File spelling: the sheet is `kurt.png` but the character is **Curt / Curly** — data uses Curt; the art filename can stay or be renamed later.
+- Handles: **Johnny Cool**, **Curt**, **Scum** (this supersedes the earlier "Johnny Weenie"). Real names Johnny / Curt / Gary. The handle "Curly" was dropped on 2026-09-07 (owner call) — he is simply **Curt**.
+- File spelling: the sheet is `kurt.png` but the character is **Curt** — data uses Curt; the art filename can stay or be renamed later.
 - Game-ready art: `SCUMForce/public/assets/sprites/characters/{johnny,kurt,gary,stanley}.png` and `.../projectiles/{tp,tp-trail,bleu-cheese,bleu-cheese-explosion,bowling-ball}.png`. Raw/originals in `.../art_drop/_staging/`. Sheets are Gain-Ground-style, expected 8-directional.
 
 ## 6. What stays / what changes in code

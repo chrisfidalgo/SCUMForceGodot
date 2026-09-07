@@ -81,7 +81,7 @@ Full reuse of the existing SCUM Force world:
 
 - **Hub:** Smoke N' Bowl, a bowling alley (Americana, campy, absurd).
 - **Inciting event:** something tears the bowling alley apart and scatters the crew across time (Wizard-of-Oz-style), enabling a wide variety of eras/settings.
-- **Playable cast:** Gary/SCUM (bowling league leader, bowling ball), Johnny/Weenie (janitor, toilet paper, fast/low-HP), Curt/Curly (cook, bleu cheese, slow/high-HP), Stanley (maintenance, wrench), Angelo (unlockable elder archetype, classic bowling ball).
+- **Playable cast:** Gary/SCUM (bowling league leader, bowling ball), Johnny/Weenie (janitor, toilet paper, fast/low-HP), Curt (cook, bleu cheese, slow/high-HP), Stanley (maintenance, wrench), Angelo (unlockable elder archetype, classic bowling ball).
 - **Villains:** Mr. Sir (BAG CORP leader, primary antagonist), Bag Guys (BAG CORP's disposable army — see Art Direction above for their new role as cross-era fodder), Lobstersharktopus Man (BAG CORP's engineered weapon, boss-tier threat).
 - **Tone:** absurd, campy, Americana-inspired, cartoon violence — heroes lean on silly objects rather than guns/traditional weapons, even though villains may use them.
 

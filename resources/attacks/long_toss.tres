@@ -10,5 +10,5 @@ lateral_motion = 0
 channel = 0
 damage_half_hearts = 2
 cooldown_sec = 1.2
-projectile_speed = 200.0
+projectile_speed = 115.0
 range_px = 130.0

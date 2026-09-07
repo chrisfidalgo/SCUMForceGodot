@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("1_chardef")
 display_name = "Johnny Cool"
-move_speed = 150.0
+move_speed = 80.0
 placeholder_color = Color(0.62, 0.35, 0.85, 1)
 max_half_hearts = 4
 primary_attack = ExtResource("2_primary")

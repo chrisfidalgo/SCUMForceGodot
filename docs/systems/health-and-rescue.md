@@ -8,7 +8,7 @@
 
 Health is counted in **half-hearts**, not hearts. A standard hit costs 1
 half-heart; a heavy one costs 2 or more. Johnny is `max_half_hearts = 4` (two
-hearts), Curly is `8` (four). The number lives on each `CharacterDef` `.tres`, so
+hearts), Curt is `8` (four). The number lives on each `CharacterDef` `.tres`, so
 changing how tanky someone is never means touching code.
 
 `Health` is a plain Node parented under whatever owns it — the player and every
@@ -98,7 +98,7 @@ Open `scenes/combat/gym.tscn`, press **F6**, then:
 
 1. **F4** — force the active character down. A dim purple "Johnny Cool (down)"
    mini appears where he fell.
-2. **F5** — swap to Curly. The body turns green and the hearts jump from 4 pips
+2. **F5** — swap to Curt. The body turns green and the hearts jump from 4 pips
    to 8 — the swap should be unmistakable at a glance.
 3. Walk over the mini. It brightens to full purple and follows; the HUD reads
    `escorting: 1 (no penalty)`.

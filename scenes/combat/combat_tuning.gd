@@ -9,7 +9,7 @@ extends RefCounted
 ## instead; these are the cross-cutting projectile/height knobs.
 
 ## Ground shadow under a projectile.
-static var shadow_base_radius := 8.0        ## x-radius at height 0
+static var shadow_base_radius := 7.0        ## x-radius at height 0
 static var shadow_shrink_per_unit := 0.04   ## how fast it shrinks with height
 static var shadow_alpha := 0.5              ## opacity at height 0
 

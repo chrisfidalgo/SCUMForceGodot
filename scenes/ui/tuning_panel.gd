@@ -91,7 +91,7 @@ func _rebuild_rows() -> void:
 	_rows.add_child(log_btn)
 
 ## The active character's own numbers — the ones that decide how a character
-## FEELS before any attack is fired. Move speed is the whole Johnny-vs-Curly
+## FEELS before any attack is fired. Move speed is the whole Johnny-vs-Curt
 ## contrast, so it belongs at the top of the panel, not buried in a .tres.
 ##
 ## These write to the CharacterDef resource, which is shared and NOT saved, so

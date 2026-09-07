@@ -16,7 +16,7 @@ One 640×360 arena, fixed camera at center, plain placeholder-tile floor with ar
 
 ## 2. The two characters
 
-> **Superseded:** the kits and aim types here are replaced by [`04-COMBAT-MODEL.md`](04-COMBAT-MODEL.md) §4 (starters Johnny Cool / Curly / Scum; no cursor cone). Retained for history.
+> **Superseded:** the kits and aim types here are replaced by [`04-COMBAT-MODEL.md`](04-COMBAT-MODEL.md) §4 (starters Johnny Cool / Curt / Scum; no cursor cone). Retained for history.
 
 Both are driven by the same generic player controller reading a `CharacterDef` resource. The pair deliberately covers **all three aim types** and **all three channels** between four attacks — that's the coverage the gym must demonstrate.
 
@@ -29,7 +29,7 @@ Both are driven by the same generic player controller reading a `CharacterDef` r
 | **Primary — "TP Roll"** | FORWARD_VECTOR · **LOW** · 1 half-heart · 0.25s cooldown · projectile speed 320 · range 240px. A fast-rolling TP projectile along his facing — his bread and butter, stopped by any low blocker. |
 | **Secondary — "Long Toss"** | FREE_CONE 120° · **HIGH** · 2 half-hearts · 1.2s cooldown · lobbed arc · range 200px. A thrown TP wad that sails over low walls and reaches elevated targets — his answer to what the roll can't touch. |
 
-### Curt "Curly" — slow and tanky
+### Curt — slow and tanky
 
 | Field | Value (placeholder) |
 |---|---|

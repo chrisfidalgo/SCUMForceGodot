@@ -27,7 +27,7 @@ This changes how you deliver work:
 | Language | GDScript (typed), no C#, no plugins without approval |
 | Base resolution | 640×360, `canvas_items` stretch, nearest-neighbor filtering |
 | Input (first target) | Keyboard + mouse (WASD move, cursor aim); controller is a later packet |
-| First playable pair | Johnny "Weenie" (fast/fragile) + Curt "Curly" (slow/tanky) — kits in `03-GYM-SPEC.md` |
+| First playable pair | Johnny Cool (fast/fragile) + Curt (slow/tanky) — kits in `04-COMBAT-MODEL.md` §4 |
 | Save cadence | Serialize run state to a JSON blob after every resolved node (encounter/shop/event) |
 
 ## Working rules for parallel agents
