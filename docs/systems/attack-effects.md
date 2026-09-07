@@ -101,6 +101,30 @@ a copy-paste.
   the floor. It holds full opacity for two-thirds of its life then fades, so it
   looks solid rather than continuously dying.
 
+### Where the splat lands, and why it matters
+
+An impact effect spawns at the **projectile's contact point**, not at the centre
+of whatever it hit. Those are different places, and the difference is the
+difference between seeing the pool and not.
+
+A ground decal correctly renders *underneath* the things standing on it. So a
+pool spawned at a target's centre sits under that target's sprite and is hidden
+by it — completely, if the sprite is bigger than the pool. The gym's target
+dummies are 20×28, larger than the primary's 9px pool, so a centre-spawned pool
+was 100% invisible against them. Spawned at the contact point it now clears the
+body by ~10px and reads immediately.
+
+### Target dummies cannot be slowed
+
+Worth knowing when QA-ing: the gym's stationary dummies are `Node2D` hit-test
+targets, not combatants. They are not physics bodies on `enemy_body`, and they do
+not implement `add_slow`. Pools **do** spawn on them (that path works), but
+nothing is slowed and nothing is tinted, because there is nothing there to slow.
+
+**Use real enemies — F1/F2/F3 — to QA the slow itself.** The dummies are for the
+channel/elevation matrix; the enemies are for everything about damage and
+control.
+
 ### Draw order — the thing that makes a ground effect invisible
 
 The gym floor is an **opaque `ColorRect`**. A ground effect below it in draw

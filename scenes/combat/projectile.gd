@@ -122,7 +122,13 @@ func _resolve_overlaps() -> void:
 			if Faction.is_friendly(_source_faction, Faction.of(target)):
 				continue
 			target.receive_hit(_damage)
-			_impact(area.global_position, true)
+			# Splat where the PROJECTILE is, not at the target's centre. The
+			# centre of a body is underneath that body's sprite, so a ground
+			# decal spawned there is almost entirely hidden by the thing it just
+			# hit — most visibly against the 20x28 target dummies, which are
+			# bigger than the primary's pool. The contact point is also simply
+			# more correct: the cheese lands where it struck.
+			_impact(global_position, true)
 			return
 		# A blocker on our channel.
 		if _attack.wall_behavior == AttackDef.WallBehavior.REFLECT:
