@@ -20,9 +20,25 @@ gone when you stop it. That is deliberate — you experiment freely, and only th
 numbers you consciously copy back become real. The log button is how they become
 real.
 
+## What is in it
+
+Top to bottom: the **active character's own numbers**, then that character's
+**primary** and **secondary** attacks, then the **global** projectile/height
+knobs, then a section for every enemy on the field.
+
+The character block is first on purpose. `move speed` is the entire
+Johnny-vs-Curly contrast — the fast/fragile versus slow/tanky bet this whole gym
+exists to test — so it should not be buried in a `.tres` file you have to stop
+the game to open. `max half-hearts` is there too, and it writes through to the
+live health pool as well as the resource, so the HUD updates as you drag it.
+
 ## Two kinds of number, two homes
 
 This trips people up, so it's worth being explicit.
+
+**Per-character numbers** — move speed, max half-hearts — live on the
+`CharacterDef` resource, alongside `placeholder_color` (Johnny is purple, Curly
+green, so a swap is visible at a glance and a downed mini is identifiable).
 
 **Per-attack numbers** — speed, range, damage, cooldown, lob peak, sine wobble —
 live on the `AttackDef` resource (`.tres`) for that attack. Each character's

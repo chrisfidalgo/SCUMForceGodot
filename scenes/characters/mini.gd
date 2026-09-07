@@ -80,5 +80,9 @@ func _refresh_label() -> void:
 		return
 	var who := character_def.display_name if character_def != null else "?"
 	_label.text = who if follow_target != null else "%s (down)" % who
-	if _visual != null:
-		_visual.color = Color(0.5, 0.8, 1.0) if follow_target != null else Color(0.45, 0.45, 0.55)
+	if _visual == null:
+		return
+	# Wear the character's own placeholder colour so you can tell WHO is lying
+	# there, dimmed while down and full-strength once following.
+	var tint := character_def.placeholder_color if character_def != null else Color(0.5, 0.8, 1.0)
+	_visual.color = tint if follow_target != null else tint.darkened(0.45)

@@ -60,11 +60,14 @@ func _rebuild_rows() -> void:
 
 	var player = get_tree().get_first_node_in_group("player")
 	if player != null and player.character_def != null:
-		var prim: AttackDef = player.character_def.primary_attack
+		var cd: CharacterDef = player.character_def
+		_header("CHARACTER — %s" % cd.display_name)
+		_character_rows(player, cd)
+		var prim: AttackDef = cd.primary_attack
 		if prim != null:
-			_header("PRIMARY — %s" % player.character_def.display_name)
+			_header("PRIMARY")
 			_attack_rows(prim)
-		var sec: AttackDef = player.character_def.secondary_attack
+		var sec: AttackDef = cd.secondary_attack
 		if sec != null:
 			_header("SECONDARY")
 			_attack_rows(sec)
@@ -86,6 +89,25 @@ func _rebuild_rows() -> void:
 	log_btn.add_theme_font_size_override("font_size", 7)
 	log_btn.pressed.connect(_log_values)
 	_rows.add_child(log_btn)
+
+## The active character's own numbers — the ones that decide how a character
+## FEELS before any attack is fired. Move speed is the whole Johnny-vs-Curly
+## contrast, so it belongs at the top of the panel, not buried in a .tres.
+##
+## These write to the CharacterDef resource, which is shared and NOT saved, so
+## experiments vanish on stop — use "Log values" and copy the good ones back.
+func _character_rows(player: Node, cd: CharacterDef) -> void:
+	_slider("move speed", cd.move_speed, 40.0, 300.0, 5.0, func(v): cd.move_speed = v)
+	# Changing the maximum has to reach the LIVE health pool too, or the HUD and
+	# the character disagree about how many hearts exist.
+	_slider("max half-hearts", cd.max_half_hearts, 1.0, 16.0, 1.0, func(v):
+		cd.max_half_hearts = int(v)
+		player.health.max_half_hearts = int(v))
+	_slider("i-frames sec", player.invuln_after_hit_sec, 0.0, 2.0, 0.05,
+		func(v): player.invuln_after_hit_sec = v)
+	_slider("muzzle offset", player.muzzle_offset_px, 0.0, 30.0, 1.0,
+		func(v): player.muzzle_offset_px = v)
+
 
 ## Render one "tunable" group member: its label, its attacks, its plain numbers.
 func _tunable_rows(node: Object) -> void:
@@ -174,8 +196,12 @@ func _log_values() -> void:
 	print("--- TUNING SNAPSHOT ---")
 	var player = get_tree().get_first_node_in_group("player")
 	if player != null and player.character_def != null:
-		_log_attack("primary", player.character_def.primary_attack)
-		_log_attack("secondary", player.character_def.secondary_attack)
+		var cd: CharacterDef = player.character_def
+		print("character %s: move_speed=%s max_half_hearts=%d invuln_after_hit_sec=%s muzzle_offset_px=%s" % [
+			cd.display_name, cd.move_speed, cd.max_half_hearts,
+			player.invuln_after_hit_sec, player.muzzle_offset_px])
+		_log_attack("primary", cd.primary_attack)
+		_log_attack("secondary", cd.secondary_attack)
 	for node in get_tree().get_nodes_in_group("tunable"):
 		if not is_instance_valid(node):
 			continue

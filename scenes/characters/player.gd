@@ -62,7 +62,6 @@ var _base_color := Color(0.3, 0.55, 0.9, 1.0)
 
 func _ready() -> void:
 	add_to_group("player")
-	_base_color = _body_visual.color
 	health.damaged.connect(_on_damaged)
 	health.changed.connect(func(c, m): health_changed.emit(c, m))
 	health.died.connect(_on_died)
@@ -121,6 +120,15 @@ func _fire(attack: AttackDef, is_primary: bool) -> void:
 		_secondary_cooldown = attack.cooldown_sec
 	attack_fired.emit(attack, origin, facing)
 
+## Repaint the body in the new character's placeholder colour, and remember it
+## as the colour the i-frame blink returns to.
+func _apply_placeholder_look(def: CharacterDef) -> void:
+	if _body_visual == null:
+		return
+	_base_color = def.placeholder_color
+	_body_visual.color = _base_color
+
+
 func _update_facing_indicator() -> void:
 	if _facing_indicator != null:
 		_facing_indicator.points = PackedVector2Array([Vector2.ZERO, facing * 16.0])
@@ -171,6 +179,7 @@ func set_character(def: CharacterDef) -> void:
 	_invuln_timer = 0.0
 	if def != null:
 		health.max_half_hearts = def.max_half_hearts
+		_apply_placeholder_look(def)
 	health.reset_full()
 	health.invulnerable = false
 	speed_multiplier = 1.0

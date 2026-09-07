@@ -59,6 +59,10 @@ At 0 half-hearts a character does **not** disappear. They emit `went_down`, and
 the arena turns them into a **Mini** — a small `Area2D` on the `pickup` layer
 lying exactly where they fell.
 
+A mini wears its character's `placeholder_color` — dimmed while lying down, full
+strength once following — so you can tell *who* is down without reading the
+label.
+
 A mini is deliberately **not** on any hurt layer. A downed teammate cannot be
 shot again, so a rescue can never be made impossible by bad luck. The canon is
 explicit that minis are re-rescuable and never lost.
