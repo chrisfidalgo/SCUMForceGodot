@@ -34,7 +34,9 @@ This changes how you deliver work:
 
 - **`project.godot`, the Input Map, and physics layer names are frozen after Phase 0.** They are set once by the setup packet (see `02-ARCHITECTURE.md`). Editing them in a feature packet causes merge conflicts in the worst file to merge — if your packet truly needs a new input action or layer, flag it to the orchestrator instead of editing.
 - **One packet, its own scenes.** Packet boundaries are drawn so that no two parallel packets edit the same `.tscn` or `.gd`. Stay inside your packet's file list; if you need to touch a shared file, flag it.
-- **Keep the gym runnable.** `scenes/combat/gym.tscn` must run (F5 from that scene) at the end of every packet. A packet that leaves the project in a broken state is not done.
+- **Keep the gym runnable.** `scenes/combat/gym.tscn` must run (**F6** — "run current scene" — with that
+  scene open) at the end of every packet. Note F5 runs the *main* scene, which
+  boots to a placeholder and does not reach the gym until Phase 2's P2a lands. A packet that leaves the project in a broken state is not done.
 - **Integration points are real work.** After each wave of parallel packets, one integration pass runs the gym against the acceptance criteria in `03-GYM-SPEC.md` before the next wave starts.
 - **Commit style:** small commits, present-tense summaries, one packet per branch if branching is used.
 
