@@ -87,7 +87,10 @@ func _physics_process(delta: float) -> void:
 	_update_visuals()
 
 	if _distance >= _max_range:
-		queue_free()
+		# End of flight. For an ANY_IMPACT attack this is the shot LANDING on the
+		# ground, which is a real impact and must leave its effect behind — that
+		# is what lets a lob be aimed at empty floor to deny a lane.
+		_impact(global_position, false)
 		return
 
 	_resolve_overlaps()
@@ -119,24 +122,38 @@ func _resolve_overlaps() -> void:
 			if Faction.is_friendly(_source_faction, Faction.of(target)):
 				continue
 			target.receive_hit(_damage)
-			_impact(area.global_position)
+			_impact(area.global_position, true)
 			return
 		# A blocker on our channel.
 		if _attack.wall_behavior == AttackDef.WallBehavior.REFLECT:
 			# Scaffold only (Scum's packet does true surface reflection): flip.
 			_direction = -_direction
 			return
-		_impact(global_position)
+		_impact(global_position, false)
 		return
 
-func _impact(at: Vector2) -> void:
-	if _attack.on_hit_effect != null:
+## End this projectile, leaving its effect behind if the attack calls for one.
+## `hit_enemy` distinguishes "this landed on something damageable" from "this
+## stopped against a wall or ran out of arc".
+func _impact(at: Vector2, hit_enemy: bool) -> void:
+	if _attack.on_hit_effect != null and _should_leave_effect(hit_enemy):
 		var fx := _attack.on_hit_effect.instantiate()
-		get_tree().current_scene.add_child(fx)
-		if fx is Node2D:
-			(fx as Node2D).global_position = at
+		# Sibling of this projectile, i.e. inside the arena. NOT
+		# get_tree().current_scene, which is only the arena while the gym is the
+		# scene being run directly.
+		var parent := get_parent()
+		if parent != null:
+			parent.add_child(fx)
+			if fx is Node2D:
+				(fx as Node2D).global_position = at
 	_consumed = true
 	queue_free()
+
+
+func _should_leave_effect(hit_enemy: bool) -> bool:
+	if _attack.effect_trigger == AttackDef.EffectTrigger.ANY_IMPACT:
+		return true
+	return hit_enemy
 
 func _is_ignored(area: Area2D) -> bool:
 	if _ignore == null:

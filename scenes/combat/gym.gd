@@ -219,6 +219,8 @@ func debug_reset() -> void:
 		node.queue_free()
 	for node in get_tree().get_nodes_in_group("projectiles"):
 		node.queue_free()
+	for node in get_tree().get_nodes_in_group("effects"):
+		node.queue_free()
 	_escort_chain.clear()
 	escort_changed.emit(0)
 	for dummy in get_tree().get_nodes_in_group("dummies"):

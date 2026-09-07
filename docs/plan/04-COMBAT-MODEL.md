@@ -46,10 +46,12 @@ Player-facing handles (real names in parentheses). Each starter answers both hig
 - **Primary — TP Roll:** forward, LOW, `SINE` lateral wiggle. Art: `tp.png` roll + cosmetic `tp-trail.png` tail trailing behind. No standout effect — but the wiggle gives extra chances to clip ground enemies, and Johnny is the fastest character.
 - **Secondary — TP Lob:** `STRAIGHT` `LOB` (high throw, no wiggle), `tp.png`, oval shadow. Clears low walls to strike ground targets beyond.
 
-### Curt — control/slow, tanky
-- **Primary — Bleu Cheese Packet:** forward, LOW, `bleu-cheese.png`. On enemy hit → `SLOW_FIELD`: a small ground slow area (~shadow-sized, ~0.5–1 s), shown as a cream oval.
-- **Secondary — Bleu Cheese Container Lob:** `LOB`, `bleu-cheese.png` container. On impact → `AREA_SPILL`: play the 9-frame `bleu-cheese-explosion.png`, then a **wider, longer-lasting** cream slow-oval that scales up then fades.
+### Curt — control/slow, tanky — **BUILT 2026-09-07**
+- **Primary — Bleu Cheese Packet:** forward, LOW. On enemy hit → a small cream slow-oval. `effect_trigger = ENEMY_ONLY`, so a miss leaves nothing: it rewards connecting.
+- **Secondary — Bleu Cheese Container Lob:** `LOB`. On impact → a **wider, longer-lasting** cream slow-oval that scales up then fades. `effect_trigger = ANY_IMPACT` — it spills on an enemy, a wall, **or bare floor at the end of its arc**. That last case is the point: the lob can be aimed at an empty doorway, which makes it area denial rather than just a heavier shot.
 - **Role:** best against fast-moving enemies (he can slow them).
+- **Relative to Johnny (owner call, 2026-09-07):** slower to fire and stronger per shot. Johnny 1.25 s / 1.2 s cooldowns for 1 / 2 half-hearts; Curt 1.8 s / 2.6 s for 2 / 3. Curt also walks slower (55 vs 80) and is twice as tough (8 vs 4 half-hearts).
+- **Not yet built:** the 9-frame `bleu-cheese-explosion.png` flourish, and the bleu-cheese sprites generally — Curt currently fires a placeholder cream polygon so his shots do not read as toilet paper. Mechanics are complete; see `docs/systems/attack-effects.md`.
 
 ### Scum (Gary) — groups & corridors
 - **Primary — Bowling Ball Roll:** forward, LOW, `bowling-ball.png` (15-frame roll anim), `REFLECT` — bounces off walls at the incidence angle; great down corridors and into clusters.

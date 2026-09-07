@@ -45,10 +45,20 @@ enum Channel { LOW, HIGH, BOTH }
 ## GROUND shots only: the fixed channel. (LOB derives channel from height.)
 @export var channel: Channel = Channel.LOW
 
+## When `on_hit_effect` is spawned.
+##   ENEMY_ONLY — only where the shot actually damaged something. A precise
+##                tool: miss, and you get nothing.
+##   ANY_IMPACT — wherever the shot ends: an enemy, a wall, or simply the ground
+##                where it lands at the end of its arc. A thrown container spills
+##                whatever it lands on, so this is the area-denial trigger — it
+##                can be aimed at empty floor to deny a lane.
+enum EffectTrigger { ENEMY_ONLY, ANY_IMPACT }
+
 @export_group("Impact")
 @export var damage_half_hearts: int = 1
 ## Spawned at the hit point (slow field, quake, etc.). Empty = plain damage.
 @export var on_hit_effect: PackedScene
+@export var effect_trigger: EffectTrigger = EffectTrigger.ENEMY_ONLY
 
 @export_group("Timing & reach")
 @export var cooldown_sec: float = 0.25

@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/combat/slow_field.gd" id="1_slow"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_spill"]
+radius = 30.0
+
+[node name="SlowFieldSpill" type="Area2D"]
+collision_layer = 0
+collision_mask = 4
+z_index = -1
+script = ExtResource("1_slow")
+radius_px = 30.0
+duration_sec = 2.4
+slow_multiplier = 0.4
+grow_in_sec = 0.25
+color = Color(0.94, 0.92, 0.66, 0.6)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_spill")

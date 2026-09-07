@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="AttackDef" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://resources/attack_def.gd" id="1_attackdef"]
+[ext_resource type="PackedScene" path="res://scenes/combat/slow_field_small.tscn" id="2_effect"]
+[ext_resource type="PackedScene" path="res://scenes/combat/cheese_projectile.tscn" id="3_proj"]
+
+; Curt PRIMARY - Bleu Cheese Packet (04-COMBAT-MODEL.md section 4).
+; Forward, LOW, slower to fire and harder-hitting than Johnny TP Roll.
+; effect_trigger = 0 (ENEMY_ONLY): the packet only leaves a slow patch where it
+; actually hit someone, so it rewards connecting rather than spraying.
+[resource]
+script = ExtResource("1_attackdef")
+height_profile = 0
+lateral_motion = 0
+channel = 0
+damage_half_hearts = 2
+on_hit_effect = ExtResource("2_effect")
+effect_trigger = 0
+cooldown_sec = 1.8
+projectile_speed = 95.0
+range_px = 130.0
+projectile_scene = ExtResource("3_proj")

@@ -78,6 +78,13 @@ var _wander_timer := 0.0
 var _wander_dir := Vector2.RIGHT
 var _contact_timers: Dictionary = {}
 
+## Active slow sources -> their multiplier. Held as a set rather than a timer so
+## that overlapping fields behave sensibly (the strongest wins, and leaving a
+## field restores speed immediately) instead of fighting over one countdown.
+var _slow_sources: Dictionary = {}
+## Combined slow, 1.0 = unslowed. Read by the movement code each frame.
+var speed_multiplier: float = 1.0
+
 @onready var health: Health = $Health
 @onready var _hurtbox: Area2D = $Hurtbox
 @onready var _contact_box: Area2D = $ContactBox
@@ -118,7 +125,7 @@ func _process_wanderer(delta: float) -> void:
 	_wander_timer -= delta
 	if _wander_timer <= 0.0:
 		_pick_wander_direction()
-	velocity = _wander_dir * move_speed
+	velocity = _wander_dir * move_speed * speed_multiplier
 	move_and_slide()
 	if get_slide_collision_count() > 0:
 		_wander_dir = -_wander_dir
@@ -141,9 +148,9 @@ func _process_seeker() -> void:
 	var distance := to_player.length()
 	var direction := to_player.normalized()
 	if distance > preferred_range_px:
-		velocity = direction * move_speed
+		velocity = direction * move_speed * speed_multiplier
 	elif distance < preferred_range_px * 0.75:
-		velocity = -direction * move_speed
+		velocity = -direction * move_speed * speed_multiplier
 	else:
 		velocity = Vector2.ZERO
 		_try_fire(direction)
@@ -190,6 +197,33 @@ func _tick_contact_timers(delta: float) -> void:
 			_contact_timers.erase(key)
 		else:
 			_contact_timers[key] = remaining
+
+
+## --- Being slowed (Curt's bleu cheese) --------------------------------------
+## A field calls add_slow when this enemy walks in and remove_slow on the way
+## out or when the field expires. Keyed by the source so two fields cannot
+## corrupt each other's bookkeeping.
+func add_slow(source: Object, multiplier: float) -> void:
+	_slow_sources[source] = clampf(multiplier, 0.05, 1.0)
+	_recompute_slow()
+
+
+func remove_slow(source: Object) -> void:
+	_slow_sources.erase(source)
+	_recompute_slow()
+
+
+func _recompute_slow() -> void:
+	var slowest := 1.0
+	for key in _slow_sources.keys():
+		if is_instance_valid(key):
+			slowest = minf(slowest, _slow_sources[key])
+		else:
+			_slow_sources.erase(key)
+	speed_multiplier = slowest
+	# Tint the whole node (not _visual.color, which the hit flash owns) so being
+	# slowed is legible without the field itself having to be under the enemy.
+	modulate = Color(0.65, 0.85, 1.0) if slowest < 1.0 else Color(1, 1, 1)
 
 
 func _on_died() -> void:
