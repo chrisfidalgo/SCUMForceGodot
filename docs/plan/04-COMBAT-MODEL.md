@@ -51,7 +51,7 @@ Player-facing handles (real names in parentheses). Each starter answers both hig
 - **Secondary — Bleu Cheese Container Lob:** `LOB`. On impact → a **wider, longer-lasting** cream slow-oval that scales up then fades. `effect_trigger = ANY_IMPACT` — it spills on an enemy, a wall, **or bare floor at the end of its arc**. That last case is the point: the lob can be aimed at an empty doorway, which makes it area denial rather than just a heavier shot.
 - **Role:** best against fast-moving enemies (he can slow them).
 - **Relative to Johnny (owner call, 2026-09-07):** slower to fire and stronger per shot. Johnny 1.25 s / 1.2 s cooldowns for 1 / 2 half-hearts; Curt 1.8 s / 2.6 s for 2 / 3. Curt also walks slower (55 vs 80) and is twice as tough (8 vs 4 half-hearts).
-- **Not yet built:** the 9-frame `bleu-cheese-explosion.png` flourish, and the bleu-cheese sprites generally — Curt currently fires a placeholder cream polygon so his shots do not read as toilet paper. Mechanics are complete; see `docs/systems/attack-effects.md`.
+- **Art wired 2026-09-07:** `Proj-BlueCheese.png` for the projectile (no trail, unlike the TP roll) and the 9-frame `Proj_Bleu_Cheese_Explosion-Sheet.png`, which plays in full before any cheese reaches the ground. The pool itself is drawn — a near-white, blue-tinted oval like a shadow. See `docs/systems/attack-effects.md`.
 
 ### Scum (Gary) — groups & corridors
 - **Primary — Bowling Ball Roll:** forward, LOW, `bowling-ball.png` (15-frame roll anim), `REFLECT` — bounces off walls at the incidence angle; great down corridors and into clusters.

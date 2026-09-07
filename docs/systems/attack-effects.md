@@ -43,12 +43,29 @@ script, different exported numbers:
 
 | | `slow_field_small` (packet) | `slow_field_spill` (container) |
 |---|---|---|
-| radius | 14 px | 30 px |
-| duration | 0.8 s | 2.4 s |
-| slow to | 55% speed | 40% speed |
-| grow-in | instant | 0.25 s (splashes outward) |
+| radius | 9 px | 24 px |
+| duration | 0.5 s | 1.5 s |
+| slow to | 60% speed | 40% speed |
+| grow-in | instant | 0.15 s |
+| burst | none | 9-frame explosion first |
 
-All placeholders, all `@export`s — open either scene and drag.
+The two are deliberately different *kinds* of thing, not big and small versions
+of one thing. The packet's pool is close to negligible — a nudge that makes a hit
+feel like it stuck. The container's pool is the one that controls space: 24px is
+wide enough to hold **one or two enemies at once** (verified with two enemies
+28px apart, both slowed).
+
+All `@export`s — open either scene and drag.
+
+### The burst comes first
+
+The container plays the 9-frame explosion sheet **before** any cheese is on the
+ground. During the burst nothing is slowed and the pool has zero radius; when the
+last frame finishes the sprite hides and the pool grows in. Measured: 9 frames
+over 22 physics frames at 24 fps, then handover.
+
+Give any field a burst by adding a `Burst` `Sprite2D` child with a sheet and its
+`hframes` set; a field without one skips straight to the pool.
 
 **Slowing is a set, not a timer.** While an enemy overlaps a field, that field
 registers itself on the enemy as one slow source; stepping out releases it
@@ -71,27 +88,37 @@ methods and the field works unchanged. Note the player's own `speed_multiplier`
 is owned by the escort loop, so that wiring needs a moment's thought rather than
 a copy-paste.
 
-## Placeholder art
+## Art
 
-`bleu-cheese.png` and the 9-frame `bleu-cheese-explosion.png` from the art
-direction **do not exist yet**. Curt fires `cheese_projectile.tscn` — a cream
-polygon with darker veins — purely so his shots don't *read as toilet paper*
-during the feel playtest. The spill is drawn as a squashed cream oval, matching
-how the projectile ground-shadow is drawn, so it reads as lying on the floor.
+- **Projectile:** `Proj-BlueCheese.png` (10×14), wired into
+  `cheese_projectile.tscn`. It has **no Tail node** — the cheese is a simple
+  projectile, unlike the unrolling toilet paper. `projectile.gd` looks the tail
+  up with `get_node_or_null`, so its absence is expected and handled.
+- **Burst:** `Proj_Bleu_Cheese_Explosion-Sheet.png` (360×40 = 9 horizontal frames
+  of 40×40), on the spill field's `Burst` sprite with `hframes = 9`.
+- **Pool:** drawn, not a sprite — a near-white oval with a cold blue cast,
+  squashed the same way the projectile's ground shadow is so it reads as lying on
+  the floor. It holds full opacity for two-thirds of its life then fades, so it
+  looks solid rather than continuously dying.
 
-Swap in the real art by pointing `AttackDef.projectile_scene` at a new scene and
-replacing the field's `_draw` with a sprite. Nothing else changes.
+### Draw order — the thing that makes a ground effect invisible
+
+The gym floor is an **opaque `ColorRect`**. A ground effect below it in draw
+order simply cannot be seen, and nothing warns you. The floor now sits at
+`z_index = -10` and the fields at `-1`, giving: floor → pools → everything
+standing on them. If you add another ground effect, put it between those two.
 
 ## Testing it by hand
 
 Open the gym, **F6**, **F5** to swap to Curt, then:
 
 1. **F1** to spawn a Wanderer. Hit it with **J** (packet). It takes 2 half-hearts,
-   turns pale blue, and visibly crawls inside a small cream puddle.
+   turns pale blue, and briefly crawls inside a small near-white puddle. It is
+   meant to be nearly negligible — the lob is what controls space.
 2. Fire **J** into the tall wall. No puddle — `ENEMY_ONLY` means a miss leaves
    nothing.
-3. Fire **K** (container lob) at **empty floor**. It still spills, and the puddle
-   scales up over a quarter-second. Now walk an enemy through it.
+3. Fire **K** (container lob) at **empty floor**. The explosion plays first,
+   then the pool grows in and stands for 1.5s. Now walk an enemy through it.
 4. Lob **K** over the low wall from the right distance — it clears the wall *and*
    spills on the far side. That combination is Curt's whole answer to a defended
    position.

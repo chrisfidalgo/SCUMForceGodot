@@ -27,6 +27,7 @@ position = Vector2(320, 180)
 
 [node name="Floor" type="ColorRect" parent="."]
 mouse_filter = 2
+z_index = -10
 offset_left = 0.0
 offset_top = 0.0
 offset_right = 640.0

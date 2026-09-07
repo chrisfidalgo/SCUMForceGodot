@@ -3,16 +3,19 @@
 [ext_resource type="Script" path="res://scenes/combat/slow_field.gd" id="1_slow"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_field"]
-radius = 14.0
+radius = 9.0
 
+; Curt PRIMARY pool - deliberately almost negligible. It is a nudge, not a
+; zone: enough to make a hit feel like it stuck, not enough to control space.
+; The container lob is what controls space. No burst animation here.
 [node name="SlowFieldSmall" type="Area2D"]
 collision_layer = 0
 collision_mask = 4
 z_index = -1
 script = ExtResource("1_slow")
-radius_px = 14.0
-duration_sec = 0.8
-slow_multiplier = 0.55
+radius_px = 9.0
+duration_sec = 0.5
+slow_multiplier = 0.6
 grow_in_sec = 0.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
