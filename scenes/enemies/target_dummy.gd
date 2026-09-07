@@ -82,7 +82,8 @@ func _flash() -> void:
 func _spawn_damage_number(damage_half_hearts: int) -> void:
 	var label := Label.new()
 	label.text = "-%d" % damage_half_hearts
-	label.position = Vector2(-8.0, -26.0)
+	label.add_theme_font_size_override("font_size", 8)
+	label.position = Vector2(-4.0, -22.0)
 	add_child(label)
 	var tween: Tween = create_tween()
 	tween.set_parallel(true)

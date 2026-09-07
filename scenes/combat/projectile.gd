@@ -14,11 +14,8 @@ extends Area2D
 ## Because the mask changes mid-flight we resolve hits by polling overlaps each
 ## physics frame rather than relying on the one-shot area_entered signal.
 
-@export_group("Visual tuning (placeholder feel)")
-@export var height_scale_per_unit: float = 0.02   ## sprite grows this much per height unit
-@export var shadow_base_radius: float = 4.0       ## ground-shadow x-radius at height 0
-@export var shadow_shrink_per_unit: float = 0.045 ## how fast the shadow shrinks with height
-@export var tail_gap_px: float = 5.0              ## how far the cosmetic tail trails behind
+## Projectile visual tuning (shadow, scale, trail) lives on CombatTuning so the
+## in-play tuning panel can adjust it live. Per-attack numbers are on AttackDef.
 
 var _attack: AttackDef
 var _direction := Vector2.UP
@@ -33,9 +30,10 @@ var _base_position := Vector2.ZERO
 var _channel: AttackDef.Channel = AttackDef.Channel.LOW
 var _consumed := false
 var _started := false
+var _tail_time := 0.0
 
 @onready var _visual: Node2D = $Visual
-@onready var _tail: Node2D = get_node_or_null("Visual/Tail")
+@onready var _tail: Sprite2D = get_node_or_null("Visual/Tail")
 
 ## Configure from the AttackDef. Call BEFORE add_child() so the mask is correct
 ## before physics first sees it. `direction` is the (already 8-gated) facing.
@@ -62,6 +60,7 @@ func _physics_process(delta: float) -> void:
 	if not _started:
 		_base_position = global_position
 		_started = true
+	_tail_time += delta
 	var step := _speed * delta
 	_distance += step
 	_base_position += _direction * step
@@ -148,16 +147,23 @@ func _resolve_hurt_target(area: Area2D) -> Object:
 func _update_visuals() -> void:
 	if _visual != null:
 		_visual.position = Vector2(0, -_height)
-		_visual.scale = Vector2.ONE * (1.0 + _height * height_scale_per_unit)
+		_visual.scale = Vector2.ONE * (1.0 + _height * CombatTuning.height_scale_per_unit)
 	if _tail != null:
-		_tail.position = -_direction * tail_gap_px
+		# The trail art is drawn as a horizontal streak (authored along +X), so it
+		# has to be turned to face the way we travel or it reads sideways on any
+		# non-horizontal shot. The frames are left-right symmetric, so the plain
+		# travel angle is enough - no need to flip for leftward/upward shots.
+		_tail.position = -_direction * CombatTuning.tail_gap_px
+		_tail.rotation = _direction.angle()
+		if _tail.vframes > 1:
+			_tail.frame = int(_tail_time * CombatTuning.tail_fps) % _tail.vframes
 	queue_redraw()
 
 ## The ground shadow: an oval (squashed circle) under the projectile, shrinking
 ## and fading as it climbs. Drawn on the root (ground) node so it stays put while
 ## the sprite lifts away from it.
 func _draw() -> void:
-	var shrink := 1.0 / (1.0 + _height * shadow_shrink_per_unit)
+	var shrink := 1.0 / (1.0 + _height * CombatTuning.shadow_shrink_per_unit)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.5))
-	draw_circle(Vector2.ZERO, shadow_base_radius * shrink, Color(0, 0, 0, 0.35 * shrink))
+	draw_circle(Vector2.ZERO, CombatTuning.shadow_base_radius * shrink, Color(0, 0, 0, CombatTuning.shadow_alpha * shrink))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

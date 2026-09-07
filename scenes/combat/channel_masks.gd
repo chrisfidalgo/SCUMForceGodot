@@ -42,18 +42,12 @@ static func mask_for_channel(channel: AttackDef.Channel) -> int:
 			return 0
 
 ## --- Height → channel (04-COMBAT-MODEL.md §2) -------------------------------
-## A projectile carries a `height` scalar (elevation units, 0 = ground). These
-## two thresholds slice that continuum into the three channels. Tune by feel:
-## widening the HIGH band makes lobs clear walls more easily; a small GROUND
-## band means a lob is only "low enough to hit the ground" right at launch/landing.
-const HEIGHT_GROUND_MAX := 3.0   ## height < this  → LOW  (at/near the floor)
-const HEIGHT_HIGH_MIN := 10.0    ## height >= this → HIGH (up where it clears low walls)
-                                 ## in between      → BOTH (transitioning)
-
+## A projectile carries a `height` scalar (elevation units, 0 = ground). The
+## thresholds live on CombatTuning so the tuning panel can adjust them live.
 static func channel_for_height(height: float) -> AttackDef.Channel:
-	if height < HEIGHT_GROUND_MAX:
+	if height < CombatTuning.height_ground_max:
 		return AttackDef.Channel.LOW
-	elif height < HEIGHT_HIGH_MIN:
+	elif height < CombatTuning.height_high_min:
 		return AttackDef.Channel.BOTH
 	return AttackDef.Channel.HIGH
 

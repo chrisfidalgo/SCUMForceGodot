@@ -33,6 +33,7 @@ var _secondary_cooldown := 0.0
 @onready var _facing_indicator: Line2D = $FacingIndicator
 
 func _ready() -> void:
+	add_to_group("player")
 	set_character(character_def)
 	_update_facing_indicator()
 

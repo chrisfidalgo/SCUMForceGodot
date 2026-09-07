@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scenes/combat/gym.gd" id="1_gym"]
 [ext_resource type="PackedScene" path="res://scenes/structures/exit_zone.tscn" id="2_exit_zone"]
@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" path="res://scenes/enemies/target_dummy.tscn" id="6_target_dummy"]
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="7_player"]
 [ext_resource type="Script" path="res://scenes/combat/attack_spawner.gd" id="8_spawner"]
+[ext_resource type="PackedScene" path="res://scenes/ui/tuning_panel.tscn" id="9_tuning"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h_wall"]
 size = Vector2(640, 16)
@@ -133,3 +134,5 @@ script = ExtResource("8_spawner")
 
 [node name="Player" parent="." instance=ExtResource("7_player")]
 position = Vector2(320, 328)
+
+[node name="TuningPanel" parent="." instance=ExtResource("9_tuning")]

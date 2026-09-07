@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/tuning_panel.gd" id="1_tuning"]
+
+[node name="TuningPanel" type="CanvasLayer"]
+layer = 50
+script = ExtResource("1_tuning")
