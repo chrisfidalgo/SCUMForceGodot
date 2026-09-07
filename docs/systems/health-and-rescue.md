@@ -96,9 +96,11 @@ scenes.
 
 Open `scenes/combat/gym.tscn`, press **F6**, then:
 
-1. **F4** — force the active character down. A grey "(down)" mini appears.
-2. **F5** — swap to Curly. Note the hearts jump from 4 pips to 8.
-3. Walk over the mini. It turns blue and follows; the HUD reads
+1. **F4** — force the active character down. A dim purple "Johnny Cool (down)"
+   mini appears where he fell.
+2. **F5** — swap to Curly. The body turns green and the hearts jump from 4 pips
+   to 8 — the swap should be unmistakable at a glance.
+3. Walk over the mini. It brightens to full purple and follows; the HUD reads
    `escorting: 1 (no penalty)`.
 4. **F4**, **F5**, rescue both minis. The HUD reads `escorting: 2 (SLOWED)` and
    you can feel the drag. That difference is the thing to judge.
