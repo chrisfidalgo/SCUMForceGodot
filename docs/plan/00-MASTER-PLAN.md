@@ -49,9 +49,9 @@ was previously bundled ahead of enemies, now follows them.
 | Packet | Size | Scope (owns these files only) | Depends on |
 |---|---|---|---|
 | **P1d — Health & damage** | S/M | Shared half-heart health component, player damage intake with i-frames, death → removal. No enemies, no minis — just the damage substrate everything else calls. | Wave 1 |
-| **P1e — Enemy archetypes** | M/L | The three behaviours in `05-ENEMY-MODEL.md` (Wanderer / Turret / Seeker), each firing through the existing `AttackSpawner`, each with an `elevation` export. **Owns the projectile faction fix** (§4 of that doc) — it must land in this packet, not after. | P1d |
+| **P1e — Enemy archetypes** | M/L | The three behaviours in `05-ENEMY-MODEL.md` (Wanderer / Turret / Seeker), each firing through the existing `AttackSpawner`, each with an `elevation` export, each joining the `tunable` group so its speed/cooldown/range are live-tunable. **Owns the projectile faction fix** (§4 of that doc) — it must land in this packet, not after. | P1d |
 | **P1f — Downed state, rescue & exit loop** | M | Downed → mini transformation, pickup/follow-chain, 2+ escort speed penalty, drop-on-death, re-rescue, exit-zone banking, character swap flow. | P1d (parallel with P1e) |
-| **P1g — Debug tray & combat HUD** | S/M | `scenes/ui/debug_tray.tscn` (F1–F6 incl. channel-viz overlay and per-archetype spawn), minimal HUD (hearts, cooldowns, mini count). Extends the existing `` ` `` tuning panel rather than replacing it. | Wave 1 (spawn hooks land as P1e/P1f merge) |
+| **P1g — Debug tray & combat HUD** | S/M | `scenes/ui/debug_tray.tscn` (F1–F6 incl. channel-viz overlay and per-archetype spawn), minimal HUD (hearts, cooldowns, mini count). **Complements the `` ` `` tuning panel — does not replace or absorb it.** The tray spawns and inspects; the panel tunes. | Wave 1 (spawn hooks land as P1e/P1f merge) |
 
 **Integration pass 2 (S):** full acceptance run — `03-GYM-SPEC.md` criteria 1–12
 plus `05-ENEMY-MODEL.md` §6. **Then the owner playtests the core question: does

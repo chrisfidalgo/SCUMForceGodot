@@ -7,6 +7,19 @@ extends CanvasLayer
 ## AttackDefs as mouse sliders, so values can be dialed in WITHOUT leaving play
 ## mode. "Log values" prints the current numbers to the console so good settings
 ## can be copied back into the .tres files. Nothing here ships in a real build.
+##
+## ANYTHING can put its own knobs in this panel — it is not player-only. Add the
+## node to the "tunable" group and implement whichever of these you need:
+##
+##   get_tuning_label()   -> String              a header for your section
+##   get_tuning_attacks() -> Array[AttackDef]    attacks to expose (optional)
+##   get_tuning_spec()    -> Array[Dictionary]   plain numbers to expose (optional)
+##        each entry: {"property": "move_speed", "min": 10.0, "max": 200.0, "step": 5.0}
+##
+## That is the whole contract. An enemy exposes its fire cooldown and preferred
+## range by implementing get_tuning_spec() and joining the group — no edit to
+## this file. Keeping the seam here means packets that add tunable things never
+## have to touch a shared script (01-AGENT-BRIEFING.md, parallel-work rules).
 
 const TOGGLE_KEYCODE := KEY_QUOTELEFT  # the ` / ~ key
 
@@ -56,6 +69,9 @@ func _rebuild_rows() -> void:
 			_header("SECONDARY")
 			_attack_rows(sec)
 
+	for node in get_tree().get_nodes_in_group("tunable"):
+		_tunable_rows(node)
+
 	_header("GLOBAL (projectile/height)")
 	_slider("shadow radius", CombatTuning.shadow_base_radius, 2, 20, 0.5, func(v): CombatTuning.shadow_base_radius = v)
 	_slider("shadow alpha", CombatTuning.shadow_alpha, 0, 1, 0.05, func(v): CombatTuning.shadow_alpha = v)
@@ -70,6 +86,42 @@ func _rebuild_rows() -> void:
 	log_btn.add_theme_font_size_override("font_size", 7)
 	log_btn.pressed.connect(_log_values)
 	_rows.add_child(log_btn)
+
+## Render one "tunable" group member: its label, its attacks, its plain numbers.
+func _tunable_rows(node: Object) -> void:
+	if node == null or not is_instance_valid(node):
+		return
+	var label := "TUNABLE"
+	if node.has_method("get_tuning_label"):
+		label = str(node.call("get_tuning_label"))
+	var attacks: Array = []
+	if node.has_method("get_tuning_attacks"):
+		attacks = node.call("get_tuning_attacks")
+	var spec: Array = []
+	if node.has_method("get_tuning_spec"):
+		spec = node.call("get_tuning_spec")
+	if attacks.is_empty() and spec.is_empty():
+		return
+	_header(label)
+	for a in attacks:
+		if a is AttackDef:
+			_attack_rows(a)
+	for entry in spec:
+		_spec_slider(node, entry)
+
+## One slider bound to a plain property on a node, described by a spec entry.
+func _spec_slider(node: Object, entry: Dictionary) -> void:
+	var prop: String = str(entry.get("property", ""))
+	if prop == "":
+		return
+	var current: Variant = node.get(prop)
+	if not (current is float or current is int):
+		push_warning("tuning_panel: %s.%s is not a number, skipped." % [node, prop])
+		return
+	_slider(prop, float(current),
+		float(entry.get("min", 0.0)), float(entry.get("max", 100.0)),
+		float(entry.get("step", 1.0)),
+		func(v): node.set(prop, v))
 
 func _attack_rows(a: AttackDef) -> void:
 	_slider("speed", a.projectile_speed, 40, 600, 5, func(v): a.projectile_speed = v)
@@ -124,6 +176,19 @@ func _log_values() -> void:
 	if player != null and player.character_def != null:
 		_log_attack("primary", player.character_def.primary_attack)
 		_log_attack("secondary", player.character_def.secondary_attack)
+	for node in get_tree().get_nodes_in_group("tunable"):
+		if not is_instance_valid(node):
+			continue
+		var label := str(node.call("get_tuning_label")) if node.has_method("get_tuning_label") else str(node)
+		if node.has_method("get_tuning_attacks"):
+			for a in node.call("get_tuning_attacks"):
+				if a is AttackDef:
+					_log_attack(label, a)
+		if node.has_method("get_tuning_spec"):
+			for entry in node.call("get_tuning_spec"):
+				var prop: String = str(entry.get("property", ""))
+				if prop != "":
+					print("%s: %s=%s" % [label, prop, node.get(prop)])
 	print("CombatTuning: shadow_base_radius=%s shadow_alpha=%s height_scale_per_unit=%s tail_gap_px=%s tail_fps=%s height_ground_max=%s height_high_min=%s" % [
 		CombatTuning.shadow_base_radius, CombatTuning.shadow_alpha, CombatTuning.height_scale_per_unit,
 		CombatTuning.tail_gap_px, CombatTuning.tail_fps, CombatTuning.height_ground_max, CombatTuning.height_high_min])

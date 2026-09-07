@@ -81,7 +81,8 @@ there is no pending engine upgrade — do not raise either as a concern.
 (`GameFlow`/`RunState`/`SaveManager`/`EventBus`), `CharacterDef`/`AttackDef`
 resources, the player controller (8-way movement and facing, fires along
 facing), the channel/height projectile model, the gym with structures and
-elevated target dummies, and the in-play tuning panel.
+elevated target dummies, and the in-play tuning panel (extensible by any node
+via the `tunable` group).
 
 **Next — Phase 1 Wave 2**, per `00-MASTER-PLAN.md`:
 
@@ -103,6 +104,11 @@ playtest gates Phase 2. Everything in Wave 2 exists to make it answerable.
 - Cross-cutting combat values that must change *while the game runs* go on
   `CombatTuning` (`scenes/combat/combat_tuning.gd`) as `static var`s instead.
   Per-attack numbers stay on `AttackDef`.
+- **Anything with knobs worth feeling out joins the `tunable` group** and
+  implements `get_tuning_label()` / `get_tuning_attacks()` / `get_tuning_spec()`.
+  Its section then appears in the in-play `` ` `` panel automatically, with no
+  edit to `tuning_panel.gd` — which is what keeps parallel packets off a shared
+  file. See `docs/systems/tuning-panel.md`.
 - **Enemies reuse the player's pipeline.** `AttackSpawner.spawn_attack()` takes
   any `source`; enemy attacks are `.tres` files like the player's, and enemy
   projectiles obey the same channel rules — which is what makes walls into cover.

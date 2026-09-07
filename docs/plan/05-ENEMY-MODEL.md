@@ -86,6 +86,15 @@ The point of speccing enemies after Wave 1 is that most of the machinery exists.
   same approach, so an enemy on a platform is only reachable by HIGH attacks.
 - **Damage in: `receive_hit(damage_half_hearts)`.** The existing hurtbox
   contract. Keep the name and signature exact.
+- **Live tuning: the `tunable` group.** The in-play `` ` `` panel
+  (`docs/systems/tuning-panel.md`) is not player-only. **Every archetype must
+  join the `tunable` group and implement `get_tuning_label()`,
+  `get_tuning_attacks()` and `get_tuning_spec()`**, exposing at minimum its move
+  speed, fire cooldown and (for the Seeker) preferred range. This is a
+  requirement, not a nicety: these are exactly the numbers that decide whether an
+  encounter feels fair, and they are unjudgeable except while playing. The
+  contract is a group plus three methods, so no enemy packet edits the panel
+  script — see `01-AGENT-BRIEFING.md` on file ownership.
 
 ---
 
@@ -142,6 +151,8 @@ The gym stands up when, with the debug tray, the owner can:
 4. Kill each archetype and see it die.
 5. Watch a Seeker close from across the arena, stop at range, and fire.
 6. Confirm an enemy projectile passes harmlessly through another enemy.
+7. Open the `` ` `` panel mid-fight and retune an archetype's speed, cooldown and
+   attack without leaving play mode.
 
 Criterion 3 is the one that matters. If it does not read clearly to a player,
 the channel system has a presentation problem, and that is worth finding now
