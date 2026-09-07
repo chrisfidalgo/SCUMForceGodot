@@ -1,8 +1,8 @@
-# 00 — Master Plan: SCUM Force Tactics (Godot)
+# 00 — Master Plan: SCUM Force: American Mayhem (Godot)
 
-Orchestration plan for building the vertical slice in phases, sized for delegation to multiple implementing agents working in parallel. Reading order for any agent picking up a packet: `01-AGENT-BRIEFING.md` → `02-ARCHITECTURE.md` → the spec for their packet.
+Orchestration plan for building the vertical slice in phases, sized for delegation to multiple implementing agents working in parallel. Reading order for any agent picking up a packet: `01-AGENT-BRIEFING.md` → `02-ARCHITECTURE.md` → `04-COMBAT-MODEL.md` → the spec for their packet. Note `04` supersedes the combat sections of `02`/`03`.
 
-Design canon lives in `C:\Users\cfida\Documents\projects\git\SCUMForce-Tactics\PROJECT_CONTEXT.md`. This plan implements its build sequence (`NEXT_STEPS.md`): setup → gym → fixed harness → procedural maps → tooling check → vertical-slice content.
+Design canon lives in `PROJECT_CONTEXT.md` at the root of this repo. This plan implements its build sequence (`NEXT_STEPS.md`, also at the root): setup → gym → fixed harness → procedural maps → tooling check → vertical-slice content.
 
 Packet sizes: **S** ≈ one focused session, **M** ≈ a substantial session or two, **L** ≈ multi-session. Parallel-safety comes from file ownership: no two concurrent packets touch the same scene or script.
 
@@ -23,7 +23,7 @@ Packet sizes: **S** ≈ one focused session, **M** ≈ a substantial session or 
 
 ---
 
-## Phase 1 — The Gym (spec: `03-GYM-SPEC.md`)
+## Phase 1 — The Gym (specs: `03-GYM-SPEC.md`, `04-COMBAT-MODEL.md`, `05-ENEMY-MODEL.md`)
 
 Two waves of parallel packets, one integration pass.
 
@@ -37,15 +37,27 @@ Two waves of parallel packets, one integration pass.
 
 **Integration pass 1 (S, one agent):** wire P1a+P1b+P1c together in the gym; verify acceptance criteria 1–5.
 
-### Wave 2 (up to 3 agents in parallel)
+### Wave 2 — stand the gym up as a game (spec: `05-ENEMY-MODEL.md`)
 
-| Packet | Size | Scope | Depends on |
+Enemies were pulled forward on 2026-09-07 (owner call). Rationale: the gym exists
+to answer "does character choice matter?", and that question is unanswerable
+against stationary dummies — it only has meaning when something shoots back,
+takes cover, or closes distance. Dummies prove the rules; enemies prove the game.
+Health lands first because everything else depends on it; the escort loop, which
+was previously bundled ahead of enemies, now follows them.
+
+| Packet | Size | Scope (owns these files only) | Depends on |
 |---|---|---|---|
-| **P1d — Health, enemy & downed state** | M | Shared health component (half-hearts), Gym Bag Guy (chase + contact damage + death), player damage intake, downed → mini transformation. | Wave 1 |
-| **P1e — Rescue/escort & exit loop** | M | Mini pickup/follow-chain, 2+ escort speed penalty, drop-on-death, re-rescue, exit-zone banking, character swap flow. | P1d (sequence these two if only one agent is free) |
-| **P1f — Debug tray & combat HUD** | S/M | `scenes/ui/debug_tray.tscn` (F1–F6 incl. channel-viz overlay), minimal HUD (hearts, cooldowns, mini count). | Wave 1 (F2/F3 hooks land when P1d/P1e merge) |
+| **P1d — Health & damage** | S/M | Shared half-heart health component, player damage intake with i-frames, death → removal. No enemies, no minis — just the damage substrate everything else calls. | Wave 1 |
+| **P1e — Enemy archetypes** | M/L | The three behaviours in `05-ENEMY-MODEL.md` (Wanderer / Turret / Seeker), each firing through the existing `AttackSpawner`, each with an `elevation` export. **Owns the projectile faction fix** (§4 of that doc) — it must land in this packet, not after. | P1d |
+| **P1f — Downed state, rescue & exit loop** | M | Downed → mini transformation, pickup/follow-chain, 2+ escort speed penalty, drop-on-death, re-rescue, exit-zone banking, character swap flow. | P1d (parallel with P1e) |
+| **P1g — Debug tray & combat HUD** | S/M | `scenes/ui/debug_tray.tscn` (F1–F6 incl. channel-viz overlay and per-archetype spawn), minimal HUD (hearts, cooldowns, mini count). Extends the existing `` ` `` tuning panel rather than replacing it. | Wave 1 (spawn hooks land as P1e/P1f merge) |
 
-**Integration pass 2 (S):** full acceptance run, criteria 1–12. **Then the owner playtests the core question: does Johnny vs. Curt feel meaningfully different, and do the channel rules read clearly?** Tuning iterations happen here via Inspector before Phase 2 starts.
+**Integration pass 2 (S):** full acceptance run — `03-GYM-SPEC.md` criteria 1–12
+plus `05-ENEMY-MODEL.md` §6. **Then the owner playtests the core question: does
+Johnny vs. Curt feel meaningfully different, and do the channel rules read
+clearly?** Tuning happens here via the Inspector and the in-play `` ` `` panel
+before Phase 2 starts.
 
 ---
 

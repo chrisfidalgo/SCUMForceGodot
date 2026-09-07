@@ -1,6 +1,6 @@
 # 02 — Architecture & Conventions
 
-Technical foundation for SCUM Force: Tactics in Godot 4.6. Phase 0 implements everything in this document; later packets build on it without changing it. Where a value is a guess it is marked **(placeholder)** — placeholders are tunable, structure is not.
+Technical foundation for SCUM Force: American Mayhem in Godot 4.6. Phase 0 implements everything in this document; later packets build on it without changing it. Where a value is a guess it is marked **(placeholder)** — placeholders are tunable, structure is not.
 
 ## 1. Display & pixel-art settings (`project.godot`, set once in Phase 0)
 

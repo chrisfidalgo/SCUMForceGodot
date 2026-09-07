@@ -15,8 +15,8 @@ This changes how you deliver work:
 
 ## Canon you must respect
 
-- **Design source of truth:** `C:\Users\cfida\Documents\projects\git\SCUMForce-Tactics\PROJECT_CONTEXT.md`. Do not invent or alter mechanics, cast, tone, or structure that document already decides. If your packet seems to require contradicting it, stop and flag it instead.
-- **Build sequence:** `NEXT_STEPS.md` in that same folder, refined by `00-MASTER-PLAN.md` here. Do not build ahead of the current phase: no procedural map generation, no multiplayer, no real economy/balance, no ascension tuning until the plan reaches them. Placeholder values are expected and must be labeled as placeholder.
+- **Design source of truth:** `PROJECT_CONTEXT.md` at the root of this repo. Do not invent or alter mechanics, cast, tone, or structure that document already decides. If your packet seems to require contradicting it, stop and flag it instead.
+- **Build sequence:** `NEXT_STEPS.md` at the repo root, refined by `00-MASTER-PLAN.md` here. Do not build ahead of the current phase: no procedural map generation, no multiplayer, no real economy/balance, no ascension tuning until the plan reaches them. Placeholder values are expected and must be labeled as placeholder.
 - **Key identity to protect:** attacks constrained by aim type (fixed / forward-vector / free-aim-in-a-cone) and collision channel (high / low / both), with structures that block per channel. This is a **soft** system — a payoff for covering both channels, never a hard gate. If an implementation choice would make a channel mandatory to win, it's wrong.
 
 ## Decided (do not re-litigate)

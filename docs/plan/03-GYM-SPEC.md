@@ -40,7 +40,16 @@ Both are driven by the same generic player controller reading a `CharacterDef` r
 
 **The intended read the gym must produce:** Johnny shreds ground targets in the open but has to work for elevated ones; Curt hits everything but slowly and can't out-position danger. If a playtester can feel that difference inside two minutes, the core bet is validated.
 
-## 3. Test enemy — "Gym Bag Guy"
+## 3. Test enemies
+
+> **Superseded 2026-09-07 by `05-ENEMY-MODEL.md`.** The single chase-only Bag
+> Guy below was the original minimum. The gym now targets three archetypes —
+> Wanderer, Turret, Seeker — because character choice cannot be evaluated
+> against an enemy that never shoots back. The Bag Guy survives as the
+> Wanderer, with its beeline chase replaced by aimless wandering. Build from
+> `05`; the paragraph below is kept for the stat baseline only.
+
+### 3.1 Original single-enemy baseline (historical)
 
 One enemy type, spawned on demand only (no waves): walks straight toward the player at 70 px/s, GROUND elevation, 2 half-hearts of HP, deals 1 half-heart on body contact with a 0.5s per-target damage cooldown, dies with a simple pop. No attack patterns, no AI states beyond "chase" — it exists to test damage-in, damage-out, and death in isolation.
 
