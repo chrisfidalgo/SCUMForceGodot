@@ -43,6 +43,7 @@ signal hit_received(damage_half_hearts: int)
 
 
 func _ready() -> void:
+	add_to_group("dummies")
 	_base_color = _visual.color
 	_apply_elevation()
 	_refresh_hit_count_label()

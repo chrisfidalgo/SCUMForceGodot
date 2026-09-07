@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scenes/combat/gym.gd" id="1_gym"]
 [ext_resource type="PackedScene" path="res://scenes/structures/exit_zone.tscn" id="2_exit_zone"]
@@ -9,6 +9,9 @@
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="7_player"]
 [ext_resource type="Script" path="res://scenes/combat/attack_spawner.gd" id="8_spawner"]
 [ext_resource type="PackedScene" path="res://scenes/ui/tuning_panel.tscn" id="9_tuning"]
+[ext_resource type="Script" path="res://scenes/combat/channel_overlay.gd" id="10_overlay"]
+[ext_resource type="PackedScene" path="res://scenes/ui/debug_tray.tscn" id="11_tray"]
+[ext_resource type="PackedScene" path="res://scenes/ui/combat_hud.tscn" id="12_hud"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_h_wall"]
 size = Vector2(640, 16)
@@ -136,3 +139,12 @@ script = ExtResource("8_spawner")
 position = Vector2(320, 328)
 
 [node name="TuningPanel" parent="." instance=ExtResource("9_tuning")]
+
+[node name="ChannelOverlay" type="Node2D" parent="."]
+visible = false
+z_index = 100
+script = ExtResource("10_overlay")
+
+[node name="CombatHUD" parent="." instance=ExtResource("12_hud")]
+
+[node name="DebugTray" parent="." instance=ExtResource("11_tray")]

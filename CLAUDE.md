@@ -77,23 +77,26 @@ there is no pending engine upgrade — do not raise either as a concern.
 
 ## Where the build actually stands
 
-**Done:** Phase 0 foundation and Phase 1 Wave 1. Autoloads
-(`GameFlow`/`RunState`/`SaveManager`/`EventBus`), `CharacterDef`/`AttackDef`
-resources, the player controller (8-way movement and facing, fires along
-facing), the channel/height projectile model, the gym with structures and
-elevated target dummies, and the in-play tuning panel (extensible by any node
-via the `tunable` group).
+**Done:** Phase 0, Phase 1 Wave 1, and **Phase 1 Wave 2**. The gym is now a
+playable loop, not a shooting range:
 
-**Next — Phase 1 Wave 2**, per `00-MASTER-PLAN.md`:
+- Autoloads, `CharacterDef`/`AttackDef` resources, 8-way player controller,
+  channel/height projectile model, structures and elevated dummies (Wave 1).
+- Half-heart health with i-frames, and script-level factions so the height-based
+  hurt layers can still tell friend from foe (**P1d**).
+- Three enemy archetypes — Wanderer / Turret / Seeker — firing through the
+  player's own `AttackSpawner`, so enemy shots obey the channel rules and a low
+  wall is real cover (**P1e**).
+- Going down leaves a rescuable mini; pickup, follow-chain, the 2+ escort speed
+  penalty, drop-on-death and exit banking (**P1f**).
+- Debug tray (F1–F6), combat HUD, and the channel-visualisation overlay
+  (**P1g**).
 
-- **P1d** health & damage (the substrate everything else calls)
-- **P1e** the three enemy archetypes + the projectile faction fix
-- **P1f** downed state, rescue/escort & exit loop
-- **P1g** debug tray & combat HUD
-
-Then integration pass 2, then the owner's core-feel playtest: *does Johnny feel
-meaningfully different from Curt, and do the channel rules read clearly?* That
-playtest gates Phase 2. Everything in Wave 2 exists to make it answerable.
+**Next: the owner's core-feel playtest**, which the master plan gates Phase 2
+behind — *does Johnny feel meaningfully different from Curt, and do the channel
+rules read clearly?* Everything in Wave 2 exists to make that answerable. Tune
+via the Inspector and the in-play `` ` `` panel; nothing new should be built
+until that question has an answer.
 
 ## Conventions that bite if ignored
 

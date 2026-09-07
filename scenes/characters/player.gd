@@ -19,9 +19,24 @@ extends CharacterBody2D
 ## with the AttackSpawner — don't change the names/types.
 signal attack_fired(attack: AttackDef, origin: Vector2, aim_direction: Vector2)
 
+## Emitted when this character's health hits zero. The gym (not the player)
+## decides what that means — in the gym it spawns a rescuable mini and offers a
+## character swap. Keeping the consequence out of here means Phase 2 can react
+## differently without touching the controller.
+signal went_down(character: CharacterDef, at_position: Vector2)
+
+## Emitted whenever damage lands, so the HUD can flash without polling.
+signal health_changed(current_half_hearts: int, max_half_hearts: int)
+
 @export var character_def: CharacterDef = preload("res://resources/characters/johnny.tres")
 ## How far in front of the player (along facing) attacks spawn. Placeholder.
 @export var muzzle_offset_px: float = 10.0
+## How long the character is immune after taking a hit. Without this, standing in
+## a projectile stream drains a 4-half-heart character in a fraction of a second
+## and nothing reads as a discrete "hit". Placeholder — tune by feel.
+@export var invuln_after_hit_sec: float = 0.6
+## Flash the body this colour while the i-frames run, so being hit is legible.
+@export var invuln_flash_color: Color = Color(1.0, 0.4, 0.4, 1.0)
 
 ## The 8-gated forward vector: last direction moved, retained while idle.
 ## Characters start facing North (up).
@@ -29,18 +44,38 @@ var facing: Vector2 = Vector2.UP
 
 var _primary_cooldown := 0.0
 var _secondary_cooldown := 0.0
+var _invuln_timer := 0.0
+
+## Which side this unit is on — read by Projectile so the player's own shots
+## can't hurt them and enemy shots can. See scenes/combat/faction.gd.
+var faction: int = Faction.Team.PLAYER
+
+## Multiplied into move speed. The escort loop drops this below 1.0 when
+## dragging 2+ minis (03-GYM-SPEC.md §4); nothing else should touch it.
+var speed_multiplier: float = 1.0
 
 @onready var _facing_indicator: Line2D = $FacingIndicator
+@onready var _body_visual: Polygon2D = $BodyVisual
+@onready var health: Health = $Health
+
+var _base_color := Color(0.3, 0.55, 0.9, 1.0)
 
 func _ready() -> void:
 	add_to_group("player")
+	_base_color = _body_visual.color
+	health.damaged.connect(_on_damaged)
+	health.changed.connect(func(c, m): health_changed.emit(c, m))
+	health.died.connect(_on_died)
 	set_character(character_def)
 	_update_facing_indicator()
 
 func _physics_process(delta: float) -> void:
+	if health.is_dead():
+		return
 	_process_movement()
 	_process_cooldowns(delta)
 	_process_attack_input()
+	_process_invulnerability(delta)
 
 func _process_movement() -> void:
 	var raw := Vector2(
@@ -52,7 +87,7 @@ func _process_movement() -> void:
 		facing = dir
 		_update_facing_indicator()
 	var speed: float = character_def.move_speed if character_def else 0.0
-	velocity = dir * speed
+	velocity = dir * speed * speed_multiplier
 	move_and_slide()
 
 ## Snap an arbitrary input vector to the nearest of the 8 compass directions,
@@ -90,9 +125,52 @@ func _update_facing_indicator() -> void:
 	if _facing_indicator != null:
 		_facing_indicator.points = PackedVector2Array([Vector2.ZERO, facing * 16.0])
 
-## Runtime character swap (debug tray / rescue flow). Resets cooldowns so the
-## newly active character can fire immediately.
+## Fraction of the primary/secondary cooldown still to run: 1.0 just after
+## firing, 0.0 when ready. The HUD draws these as bars.
+func primary_cooldown_ratio() -> float:
+	var total: float = character_def.primary_attack.cooldown_sec if (character_def and character_def.primary_attack) else 0.0
+	return 0.0 if total <= 0.0 else clampf(_primary_cooldown / total, 0.0, 1.0)
+
+
+func secondary_cooldown_ratio() -> float:
+	var total: float = character_def.secondary_attack.cooldown_sec if (character_def and character_def.secondary_attack) else 0.0
+	return 0.0 if total <= 0.0 else clampf(_secondary_cooldown / total, 0.0, 1.0)
+
+
+## The hurtbox contract every projectile calls on overlap — same name and
+## signature as TargetDummy, so a projectile never needs to know what it hit.
+func receive_hit(damage_half_hearts: int) -> void:
+	health.take_damage(damage_half_hearts)
+
+func _on_damaged(_amount: int) -> void:
+	_invuln_timer = invuln_after_hit_sec
+	health.invulnerable = true
+
+func _process_invulnerability(delta: float) -> void:
+	if _invuln_timer <= 0.0:
+		return
+	_invuln_timer -= delta
+	# Blink while immune: visible feedback that further hits won't land.
+	_body_visual.color = invuln_flash_color if int(_invuln_timer * 20.0) % 2 == 0 else _base_color
+	if _invuln_timer <= 0.0:
+		health.invulnerable = false
+		_body_visual.color = _base_color
+
+func _on_died() -> void:
+	velocity = Vector2.ZERO
+	_body_visual.color = _base_color
+	went_down.emit(character_def, global_position)
+
+## Runtime character swap (debug tray / rescue flow). Resets cooldowns and
+## restores the pool to the NEW character's maximum, so swapping to Curt gives
+## you Curt's 4 hearts rather than whatever Johnny had left.
 func set_character(def: CharacterDef) -> void:
 	character_def = def
 	_primary_cooldown = 0.0
 	_secondary_cooldown = 0.0
+	_invuln_timer = 0.0
+	if def != null:
+		health.max_half_hearts = def.max_half_hearts
+	health.reset_full()
+	health.invulnerable = false
+	speed_multiplier = 1.0

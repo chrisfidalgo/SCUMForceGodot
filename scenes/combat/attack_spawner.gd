@@ -14,6 +14,18 @@ extends Node
 ## Fallback projectile used when an AttackDef's own projectile_scene is empty.
 @export var default_projectile_scene: PackedScene = preload("res://scenes/combat/projectile.tscn")
 
+## Where spawned projectiles are parented. Empty = this spawner's own parent
+## (the arena). Deliberately NOT get_tree().current_scene: that is only the arena
+## while the gym is run directly with F6 — once Phase 2 loads the arena as a
+## child screen via GameFlow, current_scene is main.tscn and projectiles would be
+## parented outside the arena they belong to.
+@export var projectile_container: Node = null
+
+func _projectile_parent() -> Node:
+	if projectile_container != null and is_instance_valid(projectile_container):
+		return projectile_container
+	return get_parent()
+
 func spawn_attack(attack: AttackDef, origin: Vector2, aim_direction: Vector2, source: Node) -> void:
 	if attack == null:
 		push_warning("AttackSpawner.spawn_attack: attack is null, nothing spawned.")
@@ -27,5 +39,9 @@ func spawn_attack(attack: AttackDef, origin: Vector2, aim_direction: Vector2, so
 		push_error("AttackSpawner: projectile scene's root is not a Projectile.")
 		return
 	proj.setup(attack, aim_direction, source)
-	get_tree().current_scene.add_child(proj)
+	var parent := _projectile_parent()
+	if parent == null:
+		push_error("AttackSpawner: no parent to add the projectile to.")
+		return
+	parent.add_child(proj)
 	proj.global_position = origin

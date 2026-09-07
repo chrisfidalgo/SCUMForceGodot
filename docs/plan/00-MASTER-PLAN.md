@@ -37,7 +37,7 @@ Two waves of parallel packets, one integration pass.
 
 **Integration pass 1 (S, one agent):** wire P1a+P1b+P1c together in the gym; verify acceptance criteria 1–5.
 
-### Wave 2 — stand the gym up as a game (spec: `05-ENEMY-MODEL.md`)
+### Wave 2 — stand the gym up as a game (spec: `05-ENEMY-MODEL.md`) — **DONE 2026-09-07**
 
 Enemies were pulled forward on 2026-09-07 (owner call). Rationale: the gym exists
 to answer "does character choice matter?", and that question is unanswerable
@@ -53,8 +53,15 @@ was previously bundled ahead of enemies, now follows them.
 | **P1f — Downed state, rescue & exit loop** | M | Downed → mini transformation, pickup/follow-chain, 2+ escort speed penalty, drop-on-death, re-rescue, exit-zone banking, character swap flow. | P1d (parallel with P1e) |
 | **P1g — Debug tray & combat HUD** | S/M | `scenes/ui/debug_tray.tscn` (F1–F6 incl. channel-viz overlay and per-archetype spawn), minimal HUD (hearts, cooldowns, mini count). **Complements the `` ` `` tuning panel — does not replace or absorb it.** The tray spawns and inspects; the panel tunes. | Wave 1 (spawn hooks land as P1e/P1f merge) |
 
-**Integration pass 2 (S):** full acceptance run — `03-GYM-SPEC.md` criteria 1–12
-plus `05-ENEMY-MODEL.md` §6. **Then the owner playtests the core question: does
+**Integration pass 2 — done.** Verified in-engine: all three archetypes spawn
+with correct hurt layers, the Seeker closes to its preferred range, an enemy shot
+passes through another enemy but damages the player, contact damage lands, going
+down leaves a rescuable mini, the escort chain applies its penalty only at 2+,
+the chain drops (never vanishes) when the escort falls, the exit banks it, reset
+clears the field, and the overlay finds every channel-bearing area. The §6
+criterion-3 matrix passes in all four cases: a LOW shot is stopped by the low
+wall, a lob clears it and lands, the same lob at the wrong spacing sails
+overhead, and with no wall between, the LOW shot connects. **Then the owner playtests the core question: does
 Johnny vs. Curt feel meaningfully different, and do the channel rules read
 clearly?** Tuning happens here via the Inspector and the in-play `` ` `` panel
 before Phase 2 starts.

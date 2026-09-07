@@ -28,6 +28,9 @@ var _height := 0.0
 var _distance := 0.0
 var _base_position := Vector2.ZERO
 var _channel: AttackDef.Channel = AttackDef.Channel.LOW
+## Whose shot this is. The hurt layers encode height, not side, so without this
+## an enemy's projectile would damage the enemy standing in front of it.
+var _source_faction: Faction.Team = Faction.Team.NEUTRAL
 var _consumed := false
 var _started := false
 var _tail_time := 0.0
@@ -44,11 +47,13 @@ func setup(attack: AttackDef, direction: Vector2, source: Node) -> void:
 	_max_range = attack.range_px
 	_damage = attack.damage_half_hearts
 	_ignore = source
+	_source_faction = Faction.of(source)
 	collision_layer = 0
 	_channel = _channel_now()
 	collision_mask = ChannelMasks.mask_for_channel(_channel)
 
 func _ready() -> void:
+	add_to_group("projectiles")
 	_update_visuals()
 
 func _physics_process(delta: float) -> void:
@@ -108,6 +113,11 @@ func _resolve_overlaps() -> void:
 			continue
 		var target: Object = _resolve_hurt_target(area)
 		if target != null:
+			# Same-side hurtbox: pass straight through it and keep flying. This is
+			# NOT an impact — an enemy must not have its own shot eaten by the
+			# enemy beside it. Walls below stay faction-blind: they stop everyone.
+			if Faction.is_friendly(_source_faction, Faction.of(target)):
+				continue
 			target.receive_hit(_damage)
 			_impact(area.global_position)
 			return

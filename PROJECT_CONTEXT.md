@@ -60,10 +60,10 @@ PC / Steam. Desktop, real-time single-screen encounters. Local multiplayer (1-2 
 Shipped as of 2026-09-07:
 
 - **Step 1 (project initialization) — done.** Godot project, source control, folder conventions, four autoloads (`GameFlow`/`RunState`/`SaveManager`/`EventBus`), `CharacterDef`/`AttackDef` resources, frozen input map and physics layers.
-- **Step 2 (the gym) — partially done.** The arena runs with structures, elevated target dummies, a player controller (8-way movement, mouse aim), and the channel/height projectile model that carries this game's core identity. A live in-play tuning panel exists for balancing without leaving play mode.
-- **Not yet built:** health/half-hearts, the Bag Guy enemy, the downed-state mini and rescue/escort loop, the debug tray and combat HUD — i.e. the second half of step 2's stated requirements. Also unbuilt: the screen flow, so the game currently boots to a placeholder and the gym must be launched directly.
+- **Step 2 (the gym) — built.** The arena runs with structures, elevated dummies, an 8-way player controller, and the channel/height projectile model that carries this game's core identity. On top of that: half-heart health, three enemy archetypes (wandering, stationary-shooting, and seek-then-fire) whose shots obey the same channel rules the player's do, the downed-mini rescue/escort loop with its 2+ speed penalty, a debug tray, a combat HUD, a channel-visualisation overlay, and a live in-play tuning panel for balancing without leaving play mode.
+- **Not yet built:** the screen flow, so the game still boots to a placeholder and the gym must be launched directly (Phase 2, packet P2a).
 
-**The gate before anything else:** the owner playtests whether Johnny and Curt feel meaningfully different and whether the channel rules read clearly. That is the core bet of this game, and steps 3+ stay parked until it is answered.
+**The gate before anything else:** the owner playtests whether Johnny and Curt feel meaningfully different and whether the channel rules read clearly. That is the core bet of this game, and steps 3+ stay parked until it is answered. The gym now contains everything needed to answer it.
 
 ## Technical Stack
 
