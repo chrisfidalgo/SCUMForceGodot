@@ -24,6 +24,18 @@ var _name_label: Label = null
 var _primary_bar: ProgressBar = null
 var _secondary_bar: ProgressBar = null
 var _escort_label: Label = null
+var _level_label: Label = null
+var _timer_label: Label = null
+var _banner: Label = null
+
+## Banner text per Encounter.Outcome (index = enum value).
+const OUTCOME_TEXT: Array[String] = ["CLEARED", "ESCAPED", "LOST", "TIME'S OUT"]
+const BANNER_FONT_SIZE := 16
+const BANNER_Y := 150.0
+const TOP_LABEL_Y := 4.0
+const TIMER_LOW_SEC := 10.0
+const TIMER_LOW_COLOR := Color(1.0, 0.45, 0.4)
+const TIMER_COLOR := Color(1.0, 1.0, 1.0)
 
 
 func _ready() -> void:
@@ -38,8 +50,15 @@ func _ready() -> void:
 	_player.health_changed.connect(_on_health_changed)
 	if _gym.has_signal("escort_changed"):
 		_gym.escort_changed.connect(_on_escort_changed)
+	if _gym.has_signal("timer_changed"):
+		_gym.timer_changed.connect(_on_timer_changed)
+	if _gym.has_signal("timer_expired"):
+		_gym.timer_expired.connect(_on_timer_expired)
+	if _gym.has_signal("resolved"):
+		_gym.resolved.connect(_on_resolved)
 	_on_health_changed(_player.health.current(), _player.health.max_half_hearts)
 	_on_escort_changed(0)
+	_setup_level_readout()
 
 
 func _process(_delta: float) -> void:
@@ -69,6 +88,35 @@ func _on_health_changed(current: int, maximum: int) -> void:
 			pip.position.x -= HEART_GAP - 1
 		pip.color = Color(0.9, 0.25, 0.3) if i < current else Color(0.25, 0.15, 0.18)
 		_hearts.add_child(pip)
+
+
+func _setup_level_readout() -> void:
+	var level_name: String = _gym.get("display_name")
+	_level_label.text = level_name if level_name != "" else str(_gym.name)
+	var has_timer: bool = float(_gym.get("time_limit_sec")) > 0.0 and not bool(_gym.get("sandbox"))
+	_timer_label.visible = has_timer
+	if has_timer:
+		_on_timer_changed(_gym.time_left())
+
+
+func _on_timer_changed(seconds_left: float) -> void:
+	var whole := ceili(seconds_left)
+	_timer_label.text = "%d:%02d" % [int(whole / 60.0), whole % 60]
+	_timer_label.add_theme_color_override("font_color",
+			TIMER_LOW_COLOR if seconds_left <= TIMER_LOW_SEC else TIMER_COLOR)
+
+
+func _on_timer_expired() -> void:
+	_show_banner(OUTCOME_TEXT[Encounter.Outcome.TIMED_OUT])
+
+
+func _on_resolved(outcome: int, _report: Dictionary) -> void:
+	_show_banner(OUTCOME_TEXT[outcome])
+
+
+func _show_banner(text: String) -> void:
+	_banner.text = text
+	_banner.visible = true
 
 
 func _on_escort_changed(count: int) -> void:
@@ -104,6 +152,33 @@ func _build_ui() -> void:
 
 	_escort_label = _label(Vector2(0, 44), Color(0.7, 0.9, 1.0))
 	root.add_child(_escort_label)
+
+	# Level name (top centre), countdown (top right), outcome banner (centre).
+	var screen_w := get_viewport().get_visible_rect().size.x
+	_level_label = _wide_label(Vector2(0, TOP_LABEL_Y), screen_w, 8, Color(0.85, 0.85, 0.9),
+			HORIZONTAL_ALIGNMENT_CENTER)
+	add_child(_level_label)
+	_timer_label = _wide_label(Vector2(-8, TOP_LABEL_Y), screen_w, 10, TIMER_COLOR,
+			HORIZONTAL_ALIGNMENT_RIGHT)
+	_timer_label.visible = false
+	add_child(_timer_label)
+	_banner = _wide_label(Vector2(0, BANNER_Y), screen_w, BANNER_FONT_SIZE, Color(1.0, 0.9, 0.3),
+			HORIZONTAL_ALIGNMENT_CENTER)
+	_banner.visible = false
+	add_child(_banner)
+
+
+func _wide_label(pos: Vector2, width: float, font_size: int, color: Color,
+		align: HorizontalAlignment) -> Label:
+	var l := Label.new()
+	l.position = pos
+	l.size = Vector2(width, 0.0)
+	l.horizontal_alignment = align
+	l.add_theme_font_size_override("font_size", font_size)
+	l.add_theme_color_override("font_color", color)
+	l.add_theme_constant_override("outline_size", 2)
+	l.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+	return l
 
 
 func _label(pos: Vector2, color: Color) -> Label:

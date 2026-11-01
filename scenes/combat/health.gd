@@ -62,6 +62,14 @@ func heal(amount_half_hearts: int) -> void:
 	_current = mini(max_half_hearts, _current + amount_half_hearts)
 	changed.emit(_current, max_half_hearts)
 
+## Set the pool to an exact value (clamped to 0..max) - used when a character is
+## deployed carrying the health they had left from an earlier encounter. Unlike
+## `take_damage` it never emits `damaged` or `died`.
+func set_current(half_hearts: int) -> void:
+	_current = clampi(half_hearts, 0, max_half_hearts)
+	_is_dead = _current == 0
+	changed.emit(_current, max_half_hearts)
+
 ## Full restore, including undoing death — used by the debug tray's reset and by
 ## a character being brought back between encounters.
 func reset_full() -> void:
