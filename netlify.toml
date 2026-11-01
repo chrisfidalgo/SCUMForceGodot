@@ -1,0 +1,33 @@
+# Netlify config for the Godot web build.
+#
+# Netlify does not build the game itself — GitHub Actions does (see
+# .github/workflows/web-build.yml) and pushes the finished files to the
+# `web-build` branch. Point the Netlify site at that branch with no build
+# command; this file is copied into the build so these settings travel with it.
+#
+# The build is single-threaded (export preset: thread_support = false), so it
+# does NOT need cross-origin isolation to run. The two isolation headers are
+# set anyway so a threaded build works later without touching hosting.
+
+[build]
+  publish = "."
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Embedder-Policy = "require-corp"
+
+# The engine and game data change on every build — always revalidate so a
+# playtester never runs a stale mix of old .wasm and new .pck.
+[[headers]]
+  for = "/*.pck"
+  [headers.values]
+    Cache-Control = "no-cache"
+
+[[headers]]
+  for = "/*.wasm"
+  [headers.values]
+    Content-Type = "application/wasm"
+    Cache-Control = "no-cache"
