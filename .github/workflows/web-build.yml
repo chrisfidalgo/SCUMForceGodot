@@ -1,11 +1,14 @@
-# Build the Godot web export on every push to main and publish it to the
-# `web-build` branch, which Netlify serves. No Netlify secrets needed — Netlify
-# just watches that branch. See docs/systems/web-build.md.
+# Build the Godot web export and publish it to the `web-build` branch, which
+# Netlify serves. Runs ONLY when the `release` branch is pushed (that is what
+# "publish to web" means: `git push origin main:release`) or when run by hand
+# from the Actions tab. Pushing to main never touches the live site.
+# No Netlify secrets needed — Netlify just watches `web-build`.
+# See docs/systems/web-build.md.
 name: Web build
 
 on:
   push:
-    branches: [main]
+    branches: [release]
   workflow_dispatch:
 
 permissions:

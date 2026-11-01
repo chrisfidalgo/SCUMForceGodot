@@ -30,8 +30,10 @@ two buttons, the fixed run or the gym. It swaps the whole scene and has no way
 back except restarting — expected. The real Splash → CharacterSelect flow is
 Phase 2 packet P2a and replaces the launcher outright.
 
-**Web build:** every push to `main` builds the web export in GitHub Actions and
-publishes it to the `web-build` branch, which Netlify serves. Don't commit
+**Web build (publish only on request):** pushing to `main` does NOT update the
+live site. When the owner says "publish to web", run `git push origin main:release`;
+GitHub Actions then builds the web export and publishes it to the `web-build`
+branch, which Netlify serves. Don't commit
 `build/`. See `docs/systems/web-build.md`. In a browser, F5/F6 reload or focus
 the page, so the gym's F-key tray is a desktop-only tool.
 

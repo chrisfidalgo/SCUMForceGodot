@@ -4,12 +4,16 @@ How the game gets from this repo to a link you can send a playtester.
 
 ## The short version
 
-1. Push to `main` on GitHub.
-2. GitHub Actions builds the web version (about 3–5 minutes; the first run is
-   slower while it downloads Godot) and puts the finished files on the
-   **`web-build`** branch.
+Pushing to `main` saves work; it does **not** change the live site. The site
+only updates when you publish:
+
+1. **Publish** = push `main` to the `release` branch:
+   `git push origin main:release` (or tell Claude "publish to web").
+2. GitHub Actions builds the web version (a few minutes; slower the first time
+   while it downloads Godot) and puts the finished files on **`web-build`**.
 3. Netlify watches `web-build` and redeploys automatically.
 
+You can also publish from GitHub: **Actions → Web build → Run workflow**.
 You never build by hand and never commit build output. The game boots to the
 temporary launcher: **Play the run** or **Combat gym**.
 
@@ -30,7 +34,7 @@ permissions, and Netlify just reads a branch.
 | File | What it does |
 |---|---|
 | `export_presets.cfg` | The "Web" export preset. Single-threaded, so it runs in any modern browser without special server setup. |
-| `.github/workflows/web-build.yml` | Downloads Godot 4.6.3 + the web templates (cached after the first run), exports, publishes to `web-build`. Can also be run by hand from the Actions tab ("Run workflow"). |
+| `.github/workflows/web-build.yml` | Runs on a push to `release` (or by hand). Downloads Godot 4.6.3 + the web templates (cached after the first run), exports, publishes to `web-build`. |
 | `netlify.toml` | Copied into every build. Sets headers so browsers never mix an old engine file with new game data. |
 
 **Changing the Godot version:** edit `GODOT_VERSION` at the top of the workflow
