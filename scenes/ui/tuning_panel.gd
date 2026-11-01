@@ -136,14 +136,14 @@ func _spec_slider(node: Object, entry: Dictionary) -> void:
 	var prop: String = str(entry.get("property", ""))
 	if prop == "":
 		return
-	var current: Variant = node.get(prop)
+	var current: Variant = node.get_indexed(prop)
 	if not (current is float or current is int):
 		push_warning("tuning_panel: %s.%s is not a number, skipped." % [node, prop])
 		return
 	_slider(prop, float(current),
 		float(entry.get("min", 0.0)), float(entry.get("max", 100.0)),
 		float(entry.get("step", 1.0)),
-		func(v): node.set(prop, v))
+		func(v): node.set_indexed(prop, v))
 
 func _attack_rows(a: AttackDef) -> void:
 	_slider("speed", a.projectile_speed, 40, 600, 5, func(v): a.projectile_speed = v)
@@ -214,7 +214,7 @@ func _log_values() -> void:
 			for entry in node.call("get_tuning_spec"):
 				var prop: String = str(entry.get("property", ""))
 				if prop != "":
-					print("%s: %s=%s" % [label, prop, node.get(prop)])
+					print("%s: %s=%s" % [label, prop, node.get_indexed(prop)])
 	print("CombatTuning: shadow_base_radius=%s shadow_alpha=%s height_scale_per_unit=%s tail_gap_px=%s tail_fps=%s height_ground_max=%s height_high_min=%s" % [
 		CombatTuning.shadow_base_radius, CombatTuning.shadow_alpha, CombatTuning.height_scale_per_unit,
 		CombatTuning.tail_gap_px, CombatTuning.tail_fps, CombatTuning.height_ground_max, CombatTuning.height_high_min])

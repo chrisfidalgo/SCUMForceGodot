@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_def.gd" id="1_def"]
+[ext_resource type="Resource" path="res://resources/attacks/enemy_swipe.tres" id="2_attack"]
+
+; Lurker - waits motionless (ideally behind cover), then ambushes in melee.
+[resource]
+script = ExtResource("1_def")
+display_name = "Lurker"
+placeholder_color = Color(0.55, 0.35, 0.7, 1)
+max_half_hearts = 3
+activation = 1
+activation_range_px = 80.0
+wake_on_damage = true
+idle_movement = 0
+active_movement = 3
+move_speed = 75.0
+preferred_range_px = 18.0
+retreat_ratio = 0.0
+attack_style = 1
+attack = ExtResource("2_attack")
+aim = 0
+fire_cooldown_sec = 1.0
+windup_sec = 0.25
+attack_range_px = 24.0
+muzzle_offset_px = 8.0

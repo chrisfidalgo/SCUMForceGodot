@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_def.gd" id="1_def"]
+[ext_resource type="Resource" path="res://resources/attacks/bag_shot.tres" id="2_attack"]
+
+; Sentry - sleeps in place until the player comes close (or hits it), then shoots.
+[resource]
+script = ExtResource("1_def")
+display_name = "Sentry"
+placeholder_color = Color(0.45, 0.6, 0.85, 1)
+max_half_hearts = 3
+activation = 1
+activation_range_px = 140.0
+wake_on_damage = true
+idle_movement = 0
+active_movement = 0
+attack_style = 2
+attack = ExtResource("2_attack")
+aim = 0
+fire_cooldown_sec = 1.6
+windup_sec = 0.3
+attack_range_px = 200.0

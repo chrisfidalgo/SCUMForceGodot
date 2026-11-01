@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_def.gd" id="1_def"]
+
+; Wanderer - walks aimlessly, never attacks; a body in the way.
+[resource]
+script = ExtResource("1_def")
+display_name = "Wanderer"
+placeholder_color = Color(0.85, 0.7, 0.3, 1)
+max_half_hearts = 2
+activation = 0
+idle_movement = 0
+active_movement = 1
+move_speed = 40.0
+wander_change_sec = 1.5
+attack_style = 0

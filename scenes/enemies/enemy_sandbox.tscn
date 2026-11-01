@@ -1,0 +1,110 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/enemy_sandbox.gd" id="1_sb"]
+[ext_resource type="Script" path="res://scenes/combat/attack_spawner.gd" id="2_spawner"]
+[ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="4_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/structures/low_wall.tscn" id="5_low"]
+[ext_resource type="PackedScene" path="res://scenes/structures/tall_wall.tscn" id="6_tall"]
+[ext_resource type="Script" path="res://scenes/enemies/patrol_route.gd" id="7_route"]
+[ext_resource type="Resource" path="res://resources/enemies/sentry.tres" id="8_sentry"]
+[ext_resource type="Resource" path="res://resources/enemies/patroller.tres" id="9_patroller"]
+[ext_resource type="Resource" path="res://resources/enemies/brawler.tres" id="10_brawler"]
+[ext_resource type="Resource" path="res://resources/enemies/turret.tres" id="11_turret"]
+[ext_resource type="PackedScene" path="res://scenes/ui/tuning_panel.tscn" id="12_tuning"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_edge"]
+size = Vector2(640, 16)
+
+[node name="EnemySandbox" type="Node2D"]
+script = ExtResource("1_sb")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(320, 180)
+
+[node name="Floor" type="ColorRect" parent="."]
+z_index = -10
+mouse_filter = 2
+offset_right = 640.0
+offset_bottom = 360.0
+color = Color(0.16, 0.19, 0.15, 1)
+
+[node name="TopWall" type="StaticBody2D" parent="."]
+position = Vector2(320, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TopWall"]
+shape = SubResource("RectangleShape2D_edge")
+
+[node name="BottomWall" type="StaticBody2D" parent="."]
+position = Vector2(320, 360)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BottomWall"]
+shape = SubResource("RectangleShape2D_edge")
+
+[node name="LeftWall" type="StaticBody2D" parent="."]
+position = Vector2(0, 180)
+rotation = 1.5708
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LeftWall"]
+shape = SubResource("RectangleShape2D_edge")
+
+[node name="RightWall" type="StaticBody2D" parent="."]
+position = Vector2(640, 180)
+rotation = 1.5708
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RightWall"]
+shape = SubResource("RectangleShape2D_edge")
+
+[node name="LowWall" parent="." instance=ExtResource("5_low")]
+position = Vector2(480, 140)
+
+[node name="TallWall" parent="." instance=ExtResource("6_tall")]
+position = Vector2(200, 250)
+
+[node name="PatrolRoute" type="Node2D" parent="."]
+script = ExtResource("7_route")
+
+[node name="P1" type="Marker2D" parent="PatrolRoute"]
+position = Vector2(100, 80)
+
+[node name="P2" type="Marker2D" parent="PatrolRoute"]
+position = Vector2(260, 80)
+
+[node name="P3" type="Marker2D" parent="PatrolRoute"]
+position = Vector2(260, 160)
+
+[node name="AttackSpawner" type="Node" parent="."]
+script = ExtResource("2_spawner")
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="Sentry" parent="Enemies" instance=ExtResource("4_enemy")]
+position = Vector2(480, 80)
+def = ExtResource("8_sentry")
+
+[node name="Patroller" parent="Enemies" node_paths=PackedStringArray("patrol_route") instance=ExtResource("4_enemy")]
+position = Vector2(100, 80)
+def = ExtResource("9_patroller")
+patrol_route = NodePath("../../PatrolRoute")
+
+[node name="Brawler" parent="Enemies" instance=ExtResource("4_enemy")]
+position = Vector2(560, 300)
+def = ExtResource("10_brawler")
+
+[node name="Turret" parent="Enemies" instance=ExtResource("4_enemy")]
+position = Vector2(60, 200)
+def = ExtResource("11_turret")
+facing_degrees = 0.0
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(320, 320)
+
+[node name="TuningPanel" parent="." instance=ExtResource("12_tuning")]

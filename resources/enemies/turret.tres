@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_def.gd" id="1_def"]
+[ext_resource type="Resource" path="res://resources/attacks/bag_lob.tres" id="2_attack"]
+
+; Turret - never moves, lobs along the placement's facing_degrees on a cooldown.
+[resource]
+script = ExtResource("1_def")
+display_name = "Turret"
+placeholder_color = Color(0.8, 0.3, 0.3, 1)
+max_half_hearts = 2
+activation = 0
+idle_movement = 0
+active_movement = 0
+move_speed = 0.0
+attack_style = 2
+attack = ExtResource("2_attack")
+aim = 1
+fire_cooldown_sec = 1.8
+windup_sec = 0.0
+attack_range_px = 0.0

@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="EnemyDef" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/enemy_def.gd" id="1_def"]
+[ext_resource type="Resource" path="res://resources/attacks/bag_shot.tres" id="2_attack"]
+
+; Patroller - walks its route; chases and shoots when it spots you; with the
+; leash on, gives up and returns to the route when you get away.
+[resource]
+script = ExtResource("1_def")
+display_name = "Patroller"
+placeholder_color = Color(0.5, 0.75, 0.45, 1)
+max_half_hearts = 3
+activation = 1
+activation_range_px = 100.0
+wake_on_damage = true
+leash_enabled = true
+leash_range_px = 190.0
+idle_movement = 2
+active_movement = 3
+move_speed = 50.0
+patrol_mode = 1
+patrol_wait_sec = 0.6
+preferred_range_px = 110.0
+retreat_ratio = 0.75
+attack_style = 2
+attack = ExtResource("2_attack")
+aim = 0
+fire_cooldown_sec = 2.0
+windup_sec = 0.3
+attack_range_px = 200.0

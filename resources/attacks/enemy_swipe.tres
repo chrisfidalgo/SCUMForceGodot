@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="AttackDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/attack_def.gd" id="1_attackdef"]
+
+; Enemy melee swipe - a very short GROUND/LOW shot, so a low wall blocks it like
+; any other low attack. All values placeholder; tune in play.
+[resource]
+script = ExtResource("1_attackdef")
+height_profile = 0
+lateral_motion = 0
+channel = 0
+damage_half_hearts = 1
+cooldown_sec = 0.9
+projectile_speed = 300.0
+range_px = 24.0

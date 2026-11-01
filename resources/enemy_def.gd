@@ -60,6 +60,9 @@ enum PatrolMode { LOOP, PING_PONG }
 @export var leash_enabled: bool = false
 ## PROXIMITY + leash only: the distance at which it gives up. Keep above activation range.
 @export var leash_range_px: float = 200.0
+## PROXIMITY + leash only: after waking, the leash is ignored for this long, so an
+## enemy woken by a hit from outside the leash range does not instantly fall asleep.
+@export var leash_grace_sec: float = 2.0
 
 @export_group("Movement")
 ## How it moves while dormant. Ignored when activation is ALWAYS.
