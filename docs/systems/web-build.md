@@ -57,4 +57,6 @@ the folder (Netlify, or the editor's "Run in Browser" button top-right).
   Movement, attacks, Enter and the `` ` `` tuning panel all work.
 - **Reload the page to get back to the launcher.**
 - Click the game once if keys don't respond — the page needs focus.
-- Phones and tablets aren't a target: there's no touch input.
+- Phones and tablets get an on-screen stick plus A / B / OK buttons (landscape
+  works best). See `touch-controls.md`. The debug tray and tuning panel remain
+  keyboard-only.

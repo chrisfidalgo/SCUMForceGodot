@@ -21,6 +21,7 @@ GameFlow="*res://autoload/game_flow.gd"
 RunState="*res://autoload/run_state.gd"
 SaveManager="*res://autoload/save_manager.gd"
 EventBus="*res://autoload/event_bus.gd"
+TouchControls="*res://scenes/ui/touch_controls.tscn"
 
 [display]
 
