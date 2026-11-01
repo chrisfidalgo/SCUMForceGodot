@@ -35,6 +35,12 @@ var _consumed := false
 var _started := false
 var _tail_time := 0.0
 
+## Spin of the art in flight, in degrees per second (negative = anticlockwise).
+## Per projectile SCENE rather than per attack, because it is a property of the
+## art: Curt's cheese tumbles, a toilet-paper roll does not. Only the art turns —
+## the shadow and the collision stay put.
+@export var spin_degrees_per_sec: float = 0.0
+
 @onready var _visual: Node2D = $Visual
 @onready var _tail: Sprite2D = get_node_or_null("Visual/Tail")
 
@@ -181,6 +187,7 @@ func _update_visuals() -> void:
 	if _visual != null:
 		_visual.position = Vector2(0, -_height)
 		_visual.scale = Vector2.ONE * (1.0 + _height * CombatTuning.height_scale_per_unit)
+		_visual.rotation = deg_to_rad(spin_degrees_per_sec) * _tail_time
 	if _tail != null:
 		# The trail art is drawn as a horizontal streak (authored along +X), so it
 		# has to be turned to face the way we travel or it reads sideways on any
