@@ -1,5 +1,6 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=19 format=3]
 
+[ext_resource type="Script" path="res://scenes/combat/spawn_pad.gd" id="90_spawn_pad"]
 [ext_resource type="Script" path="res://scenes/combat/gym.gd" id="1_gym"]
 [ext_resource type="PackedScene" path="res://scenes/structures/exit_zone.tscn" id="2_exit_zone"]
 [ext_resource type="PackedScene" path="res://scenes/structures/low_wall.tscn" id="3_low_wall"]
@@ -25,6 +26,7 @@ size = Vector2(16, 360)
 [node name="Gym" type="Node2D"]
 script = ExtResource("1_gym")
 sandbox = true
+deploy_grace_sec = 0.0
 default_roster = [ExtResource("14_johnny"), ExtResource("15_curt")]
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -110,6 +112,9 @@ position = Vector2(320, 28)
 
 [node name="PlayerSpawn" type="Marker2D" parent="."]
 position = Vector2(320, 328)
+
+[node name="SpawnPad" type="Node2D" parent="PlayerSpawn"]
+script = ExtResource("90_spawn_pad")
 
 [node name="Structures" type="Node2D" parent="."]
 

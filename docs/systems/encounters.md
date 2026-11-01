@@ -90,3 +90,18 @@ four markers - any enemy given that route will walk it, in order.
   purpose: choosing is never under fire.
 - Enemies that are mid-death when the last one falls are not counted twice.
 - Enemies spawned by script during play are counted too.
+
+## The spawn pad and the deploy grace
+
+`PlayerSpawn` carries a **SpawnPad**: a ring with a "START" label that pulses
+while you are choosing a character, so you can see where you will land (and
+what is standing near it) before you commit. It also draws in the editor. Its
+size, colour, pulse speed and label are exports on the `SpawnPad` node.
+
+While nobody is deployed, enemies have **no target** — they don't wake, chase or
+aim at the empty spawn point (`Player.on_field` is false).
+
+After each deploy there is a short **grace** (`deploy_grace_sec` on the
+encounter's root, default 1 s): the character can move but enemies ignore them
+and they can't be hurt, and the pad stays lit. Set it to 0 for no grace. The gym
+uses 0 so its debug invincibility toggle isn't overridden.

@@ -54,6 +54,12 @@ var _invuln_timer := 0.0
 ## can't hurt them and enemy shots can. See scenes/combat/faction.gd.
 var faction: int = Faction.Team.PLAYER
 
+## False while nobody is deployed (the picker is up, or between characters).
+## The Encounter owns this. Enemies treat an off-field player as absent — no
+## waking, chasing or aiming at an empty spawn point. True by default so test
+## scenes without an Encounter behave as before.
+var on_field: bool = true
+
 ## Multiplied into move speed. The escort loop drops this below 1.0 when
 ## dragging 2+ minis (03-GYM-SPEC.md §4); nothing else should touch it.
 var speed_multiplier: float = 1.0

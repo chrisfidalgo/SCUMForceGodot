@@ -36,6 +36,10 @@ enum Outcome { CLEARED, ESCAPED, LOST, TIMED_OUT }
 ## is free — the penalty is the risk/reward dial from PROJECT_CONTEXT.md, and a
 ## flat -25% is the placeholder the owner signed off on. Tune by feel.
 @export var escort_penalty_multiplier: float = 0.75
+## Seconds after a character appears during which enemies ignore them and they
+## can't be hurt — so a character never deploys straight into a waiting crowd.
+## The spawn pad stays lit for the duration. 0 = no grace.
+@export var deploy_grace_sec: float = 1.0
 ## Used when RunState.roster is empty (running a level alone with F6).
 @export var default_roster: Array[CharacterDef] = []
 ## How far in from the screen edge a debug-spawned enemy lands when no position is given.
@@ -57,6 +61,9 @@ signal resolved(outcome: Outcome, report: Dictionary)
 var _pool: Array[Dictionary] = []
 ## The entry for whoever is on the field right now (empty while choosing).
 var _active_entry: Dictionary = {}
+## Bumped on every deploy so a grace timer from an earlier deploy can't end the
+## current one's grace early.
+var _deploy_serial := 0
 var _escort_chain: Array[Mini] = []
 var _enemies: Array[Enemy] = []
 var _had_enemies := false
@@ -75,6 +82,8 @@ var _hurtbox_layer := 0
 @onready var _player: Player = $Player
 @onready var _spawner: AttackSpawner = $AttackSpawner
 @onready var _spawn_marker: Marker2D = $PlayerSpawn
+## Optional visual marker under PlayerSpawn; pulses while nobody is deployed.
+@onready var _spawn_pad: SpawnPad = get_node_or_null("PlayerSpawn/SpawnPad") as SpawnPad
 @onready var _exit_zone: ExitZone = get_node_or_null("ExitZone") as ExitZone
 @onready var _picker: DeployPicker = get_node_or_null("DeployPicker") as DeployPicker
 
@@ -266,13 +275,36 @@ func deploy(def: CharacterDef) -> void:
 	_player.velocity = Vector2.ZERO
 	_player.global_position = _spawn_marker.global_position
 	_set_player_active(true)
+	_start_deploy_grace()
 	_unpause()
+
+
+func _start_deploy_grace() -> void:
+	_deploy_serial += 1
+	if deploy_grace_sec <= 0.0:
+		return
+	var serial := _deploy_serial
+	_player.on_field = false
+	_player.health.invulnerable = true
+	if _spawn_pad != null:
+		_spawn_pad.awaiting = true
+	await get_tree().create_timer(deploy_grace_sec, false).timeout
+	# Ignore if a newer deploy happened, or the character already left the field.
+	if serial != _deploy_serial or not _player.visible or _resolved:
+		return
+	_player.on_field = true
+	_player.health.invulnerable = false
+	if _spawn_pad != null:
+		_spawn_pad.awaiting = false
 
 
 ## Between deploys nobody is on the field: the player is hidden, unhittable
 ## and uncontrollable. Physics-state changes, so call from a safe moment.
 func _set_player_active(active: bool) -> void:
+	_player.on_field = active
 	_player.visible = active
+	if _spawn_pad != null:
+		_spawn_pad.awaiting = not active
 	_player.process_mode = Node.PROCESS_MODE_INHERIT if active else Node.PROCESS_MODE_DISABLED
 	_player.collision_layer = _body_layer if active else 0
 	var hurtbox := _player.get_node_or_null("Hurtbox") as CollisionObject2D

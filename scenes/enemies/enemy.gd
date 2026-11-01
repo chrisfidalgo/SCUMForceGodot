@@ -517,8 +517,13 @@ func is_winding_up() -> bool:
 	return _winding
 
 
+## The player, or null when there is nothing to target — including between
+## deploys, when the player node still exists but nobody is on the field.
 func _find_player() -> Node2D:
-	return get_tree().get_first_node_in_group("player") as Node2D
+	var player := get_tree().get_first_node_in_group("player") as Node2D
+	if player == null or not player.get("on_field"):
+		return null
+	return player
 
 
 # --- Live tuning (docs/systems/tuning-panel.md) --------------------------------

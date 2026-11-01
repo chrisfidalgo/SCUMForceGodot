@@ -1,5 +1,6 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
+[ext_resource type="Script" path="res://scenes/combat/spawn_pad.gd" id="90_spawn_pad"]
 [ext_resource type="Script" path="res://scenes/combat/encounter.gd" id="1_enc"]
 [ext_resource type="PackedScene" path="res://scenes/structures/exit_zone.tscn" id="2_exit_zone"]
 [ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="3_player"]
@@ -102,6 +103,9 @@ position = Vector2(320, 28)
 
 [node name="PlayerSpawn" type="Marker2D" parent="."]
 position = Vector2(320, 328)
+
+[node name="SpawnPad" type="Node2D" parent="PlayerSpawn"]
+script = ExtResource("90_spawn_pad")
 
 [node name="AttackSpawner" type="Node" parent="."]
 script = ExtResource("4_spawner")
