@@ -1,0 +1,114 @@
+[gd_scene load_steps=11 format=3]
+
+[ext_resource type="Script" path="res://scenes/combat/encounter.gd" id="1_enc"]
+[ext_resource type="PackedScene" path="res://scenes/structures/exit_zone.tscn" id="2_exit_zone"]
+[ext_resource type="PackedScene" path="res://scenes/characters/player.tscn" id="3_player"]
+[ext_resource type="Script" path="res://scenes/combat/attack_spawner.gd" id="4_spawner"]
+[ext_resource type="PackedScene" path="res://scenes/ui/combat_hud.tscn" id="5_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/deploy_picker.tscn" id="6_picker"]
+[ext_resource type="Resource" path="res://resources/characters/johnny.tres" id="7_johnny"]
+[ext_resource type="Resource" path="res://resources/characters/curt.tres" id="8_curt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h_wall"]
+size = Vector2(640, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v_wall"]
+size = Vector2(16, 360)
+
+[node name="Encounter" type="Node2D"]
+script = ExtResource("1_enc")
+default_roster = [ExtResource("7_johnny"), ExtResource("8_curt")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(320, 180)
+
+[node name="Floor" type="ColorRect" parent="."]
+mouse_filter = 2
+z_index = -10
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 640.0
+offset_bottom = 360.0
+color = Color(0.16, 0.19, 0.15, 1)
+
+[node name="Bounds" type="Node2D" parent="."]
+
+[node name="TopWall" type="StaticBody2D" parent="Bounds"]
+position = Vector2(320, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visual" type="ColorRect" parent="Bounds/TopWall"]
+mouse_filter = 2
+offset_left = -320.0
+offset_top = -8.0
+offset_right = 320.0
+offset_bottom = 8.0
+color = Color(0.1, 0.1, 0.12, 0.9)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds/TopWall"]
+shape = SubResource("RectangleShape2D_h_wall")
+
+[node name="BottomWall" type="StaticBody2D" parent="Bounds"]
+position = Vector2(320, 360)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visual" type="ColorRect" parent="Bounds/BottomWall"]
+mouse_filter = 2
+offset_left = -320.0
+offset_top = -8.0
+offset_right = 320.0
+offset_bottom = 8.0
+color = Color(0.1, 0.1, 0.12, 0.9)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds/BottomWall"]
+shape = SubResource("RectangleShape2D_h_wall")
+
+[node name="LeftWall" type="StaticBody2D" parent="Bounds"]
+position = Vector2(0, 180)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visual" type="ColorRect" parent="Bounds/LeftWall"]
+mouse_filter = 2
+offset_left = -8.0
+offset_top = -180.0
+offset_right = 8.0
+offset_bottom = 180.0
+color = Color(0.1, 0.1, 0.12, 0.9)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds/LeftWall"]
+shape = SubResource("RectangleShape2D_v_wall")
+
+[node name="RightWall" type="StaticBody2D" parent="Bounds"]
+position = Vector2(640, 180)
+collision_layer = 1
+collision_mask = 0
+
+[node name="Visual" type="ColorRect" parent="Bounds/RightWall"]
+mouse_filter = 2
+offset_left = -8.0
+offset_top = -180.0
+offset_right = 8.0
+offset_bottom = 180.0
+color = Color(0.1, 0.1, 0.12, 0.9)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Bounds/RightWall"]
+shape = SubResource("RectangleShape2D_v_wall")
+
+[node name="ExitZone" parent="." instance=ExtResource("2_exit_zone")]
+position = Vector2(320, 28)
+
+[node name="PlayerSpawn" type="Marker2D" parent="."]
+position = Vector2(320, 328)
+
+[node name="AttackSpawner" type="Node" parent="."]
+script = ExtResource("4_spawner")
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(320, 328)
+
+[node name="CombatHUD" parent="." instance=ExtResource("5_hud")]
+
+[node name="DeployPicker" parent="." instance=ExtResource("6_picker")]
