@@ -6,9 +6,10 @@ extends Node
 ## layers to the GameFlow autoload, then routes to the first screen. From here
 ## on, only GameFlow changes what's on screen.
 
-## Phase 0 boots to a throwaway placeholder. Phase 2 (P2a) replaces this with
-## the real Splash screen (New Game / Continue / Settings).
-const FIRST_SCREEN: PackedScene = preload("res://scenes/screens/placeholder.tscn")
+## Boots to a temporary launcher (fixed run / gym) so F5 and the web build land
+## somewhere playable. Phase 2 (P2a) replaces it with the real Splash screen
+## (New Game / Continue / Settings).
+const FIRST_SCREEN: PackedScene = preload("res://scenes/screens/launcher.tscn")
 
 @onready var screen_root: Node = $ScreenRoot
 @onready var modal_layer: CanvasLayer = $ModalLayer

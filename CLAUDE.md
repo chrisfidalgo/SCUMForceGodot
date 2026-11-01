@@ -25,10 +25,15 @@ canon folder — if you find a reference to one, it is stale.
 
 ## Running the project — read this before reporting a bug
 
-**F5 (main scene) deliberately dead-ends.** `scenes/main.tscn` boots to
-`scenes/screens/placeholder.tscn`, a static label with no input handling and no
-route onward. The real Splash → CharacterSelect flow is Phase 2 packet P2a and
-has not been built. This is expected, not a regression.
+**F5 (main scene) opens a temporary launcher** (`scenes/screens/launcher.tscn`):
+two buttons, the fixed run or the gym. It swaps the whole scene and has no way
+back except restarting — expected. The real Splash → CharacterSelect flow is
+Phase 2 packet P2a and replaces the launcher outright.
+
+**Web build:** every push to `main` builds the web export in GitHub Actions and
+publishes it to the `web-build` branch, which Netlify serves. Don't commit
+`build/`. See `docs/systems/web-build.md`. In a browser, F5/F6 reload or focus
+the page, so the gym's F-key tray is a desktop-only tool.
 
 **Things you can play today (open the scene, press F6, "run current scene"):**
 

@@ -16,8 +16,9 @@ extends Node2D
 
 const TP_ROLL: AttackDef = preload("res://resources/attacks/tp_roll.tres")
 const LONG_TOSS: AttackDef = preload("res://resources/attacks/long_toss.tres")
-const CHEESE_WHEEL: AttackDef = preload("res://resources/attacks/cheese_wheel.tres")
-const RIND_SLAM: AttackDef = preload("res://resources/attacks/rind_slam.tres")
+## Curt's current kit stands in for the retired Cheese Wheel / Rind Slam.
+const CHEESE_WHEEL: AttackDef = preload("res://resources/attacks/bleu_cheese_packet.tres")
+const RIND_SLAM: AttackDef = preload("res://resources/attacks/bleu_cheese_lob.tres")
 
 @onready var _spawner: AttackSpawner = $AttackSpawner
 

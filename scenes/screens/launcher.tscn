@@ -1,0 +1,59 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/screens/launcher.gd" id="1_launcher"]
+
+[node name="Launcher" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_launcher")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.101961, 0.101961, 0.121569, 1)
+
+[node name="Center" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Column" type="VBoxContainer" parent="Center"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Title" type="Label" parent="Center/Column"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "SCUM Force: American Mayhem"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/Column"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "prototype build"
+horizontal_alignment = 1
+
+[node name="RunButton" type="Button" parent="Center/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Play the run (4 levels)"
+
+[node name="GymButton" type="Button" parent="Center/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Combat gym (sandbox)"
+
+[node name="Controls" type="Label" parent="Center/Column"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "Move: WASD / arrows    Attacks: J / K    Enter: continue
+Reload the page to come back here"
+horizontal_alignment = 1

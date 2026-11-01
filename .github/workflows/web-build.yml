@@ -1,0 +1,74 @@
+# Build the Godot web export on every push to main and publish it to the
+# `web-build` branch, which Netlify serves. No Netlify secrets needed — Netlify
+# just watches that branch. See docs/systems/web-build.md.
+name: Web build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: web-build
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.6.3"
+  GODOT_RELEASE: "stable"
+
+jobs:
+  export-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Godot and export templates
+        id: godot-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/godot
+            ~/.local/share/godot/export_templates
+          key: godot-${{ env.GODOT_VERSION }}-${{ env.GODOT_RELEASE }}
+
+      - name: Download Godot and web templates
+        if: steps.godot-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          TAG="${GODOT_VERSION}-${GODOT_RELEASE}"
+          BASE="https://github.com/godotengine/godot/releases/download/${TAG}"
+          mkdir -p ~/godot
+          curl -fsSL -o /tmp/godot.zip "${BASE}/Godot_v${TAG}_linux.x86_64.zip"
+          unzip -q /tmp/godot.zip -d ~/godot
+          mv ~/godot/Godot_v${TAG}_linux.x86_64 ~/godot/godot
+          chmod +x ~/godot/godot
+          curl -fsSL -o /tmp/templates.tpz "${BASE}/Godot_v${TAG}_export_templates.tpz"
+          DEST=~/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_RELEASE}
+          mkdir -p "$DEST"
+          # Keep only the web templates — the full set is ~1 GB.
+          unzip -q -j /tmp/templates.tpz 'templates/web_*' 'templates/version.txt' -d "$DEST"
+          ls "$DEST"
+
+      - name: Import project
+        run: ~/godot/godot --headless --path . --import
+
+      - name: Export web build
+        run: |
+          set -euo pipefail
+          mkdir -p build/web
+          ~/godot/godot --headless --path . --export-release "Web" build/web/index.html
+          cp netlify.toml build/web/
+          ls -la build/web
+          test -f build/web/index.pck
+
+      - name: Publish to web-build branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: web-build
+          publish_dir: build/web
+          force_orphan: true
+          commit_message: "Web build from ${{ github.sha }}"

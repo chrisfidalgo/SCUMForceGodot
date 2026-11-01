@@ -4,3 +4,6 @@
 
 # Claude Code parallel-agent worktrees (transient)
 .claude/worktrees/
+
+# Local web export output (CI publishes it to the web-build branch)
+build/
