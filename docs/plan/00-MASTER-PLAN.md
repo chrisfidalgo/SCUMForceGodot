@@ -66,6 +66,19 @@ Johnny vs. Curt feel meaningfully different, and do the channel rules read
 clearly?** Tuning happens here via the Inspector and the in-play `` ` `` panel
 before Phase 2 starts.
 
+### Wave 3 — composable enemies, encounters & a fixed run (spec: `06-ENEMY-BEHAVIOURS-AND-ENCOUNTERS.md`)
+
+Owner call 2026-11-01: stand up more gameplay structure before the deep feel
+pass. Enemies become three independent choices (activation / movement / attack)
+in an `EnemyDef` `.tres`; the gym's wiring becomes a shared `Encounter` base;
+four hand-built levels play as a fixed chain. Pulls a lean slice of P2c forward.
+
+| Packet | Size | Scope | Depends on |
+|---|---|---|---|
+| **P1h — Enemy behaviours** | M/L | `EnemyDef`-driven enemy, 8 presets, melee swipe, debug-tray type cycling. | Wave 2 (parallel with P1i) |
+| **P1i — Encounter core** | M/L | `Encounter` base + inherited `encounter_base.tscn`, deploy picker, resolution, timer, gym → sandbox encounter. | Wave 2 (parallel with P1h) |
+| **P1j — Levels, fixed run & integration** | M | Merge P1h+P1i, 4 levels, `fixed_run.tscn`, acceptance §6. | P1h + P1i |
+
 ---
 
 ## Phase 2 — Fixed harness + view shell (detailed spec written AFTER gym validates)

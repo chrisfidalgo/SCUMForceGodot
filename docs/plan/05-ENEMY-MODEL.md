@@ -1,5 +1,9 @@
 # 05 — Enemy Model
 
+> **Partly superseded (2026-11-01) by `06-ENEMY-BEHAVIOURS-AND-ENCOUNTERS.md`:**
+> §2's three archetypes are now presets of a composable model, and §5's
+> "no melee wind-ups" is lifted. §3 and §4 still stand.
+
 Spec for the enemy archetypes that stand the gym up as a *game* rather than a
 shooting range. Written before implementation so the gym gets built once.
 
