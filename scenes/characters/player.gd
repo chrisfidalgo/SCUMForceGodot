@@ -37,6 +37,10 @@ signal health_changed(current_half_hearts: int, max_half_hearts: int)
 @export var invuln_after_hit_sec: float = 0.6
 ## Flash the body this colour while the i-frames run, so being hit is legible.
 @export var invuln_flash_color: Color = Color(1.0, 0.4, 0.4, 1.0)
+## Show the yellow facing line. Off by default when a character has a real walk
+## sheet (the sprite already shows which way they face); always shown on the
+## placeholder polygon, where it is the only cue.
+@export var show_facing_indicator_with_sheet: bool = false
 
 ## The 8-gated forward vector: last direction moved, retained while idle.
 ## Characters start facing North (up).
@@ -56,9 +60,14 @@ var speed_multiplier: float = 1.0
 
 @onready var _facing_indicator: Line2D = $FacingIndicator
 @onready var _body_visual: Polygon2D = $BodyVisual
+@onready var _walk_sprite: Sprite2D = $WalkSprite
 @onready var health: Health = $Health
 
 var _base_color := Color(0.3, 0.55, 0.9, 1.0)
+var _moving := false
+var _walk_time := 0.0
+## Compass order shared with CharacterDef.walk_rows_by_direction: N NE E SE S SW W NW.
+const DIRECTION_COUNT := 8
 
 func _ready() -> void:
 	add_to_group("player")
@@ -72,6 +81,7 @@ func _physics_process(delta: float) -> void:
 	if health.is_dead():
 		return
 	_process_movement()
+	_update_walk_animation(delta)
 	_process_cooldowns(delta)
 	_process_attack_input()
 	_process_invulnerability(delta)
@@ -82,7 +92,8 @@ func _process_movement() -> void:
 		Input.get_action_strength("move_down") - Input.get_action_strength("move_up")
 	)
 	var dir := snap_to_8(raw)
-	if dir != Vector2.ZERO:
+	_moving = dir != Vector2.ZERO
+	if _moving:
 		facing = dir
 		_update_facing_indicator()
 	var speed: float = character_def.move_speed if character_def else 0.0
@@ -129,8 +140,67 @@ func _apply_placeholder_look(def: CharacterDef) -> void:
 	_body_visual.color = _base_color
 
 
+func _has_sheet() -> bool:
+	return character_def != null and character_def.walk_sheet != null
+
+
+## Show the walk sheet when the character has one, else the placeholder polygon.
+func _apply_art(def: CharacterDef) -> void:
+	if _walk_sprite == null or _body_visual == null:
+		return
+	var sheet := def != null and def.walk_sheet != null
+	_walk_sprite.visible = sheet
+	_body_visual.visible = not sheet
+	if sheet:
+		_walk_sprite.texture = def.walk_sheet
+		_walk_sprite.region_enabled = true
+		_walk_sprite.scale = Vector2.ONE * def.sprite_scale
+		_walk_sprite.position = def.sprite_offset
+		_walk_time = 0.0
+		_update_walk_animation(0.0)
+	else:
+		_walk_sprite.texture = null
+	_update_facing_indicator()
+
+
+## Index 0..7 into walk_rows_by_direction (N NE E SE S SW W NW) for a facing.
+static func direction_index(dir: Vector2) -> int:
+	return posmod(roundi((dir.angle() + PI / 2.0) / (PI / 4.0)), DIRECTION_COUNT)
+
+
+## Pick the sheet row for the current facing and the column for the walk cycle.
+func _update_walk_animation(delta: float) -> void:
+	if not _has_sheet():
+		return
+	var def := character_def
+	var rows := def.walk_rows_by_direction
+	var di := direction_index(facing)
+	var row: int = rows[di] if di < rows.size() else 0
+	var cols := maxi(def.walk_columns, 1)
+	var col: int
+	if _moving:
+		_walk_time += delta
+		col = int(_walk_time * def.walk_fps) % cols
+	else:
+		_walk_time = 0.0
+		col = clampi(def.walk_idle_column, 0, cols - 1)
+	var fs := Vector2(def.walk_frame_size)
+	_walk_sprite.region_rect = Rect2(Vector2(col, row) * fs, fs)
+
+
+## Tint the visible body (sprite or polygon) for the i-frame blink.
+func _set_body_tint(flash: bool) -> void:
+	if _walk_sprite == null or _body_visual == null:
+		return
+	if _has_sheet():
+		_walk_sprite.modulate = invuln_flash_color if flash else Color.WHITE
+	else:
+		_body_visual.color = invuln_flash_color if flash else _base_color
+
+
 func _update_facing_indicator() -> void:
 	if _facing_indicator != null:
+		_facing_indicator.visible = not _has_sheet() or show_facing_indicator_with_sheet
 		_facing_indicator.points = PackedVector2Array([Vector2.ZERO, facing * 16.0])
 
 ## Fraction of the primary/secondary cooldown still to run: 1.0 just after
@@ -159,14 +229,14 @@ func _process_invulnerability(delta: float) -> void:
 		return
 	_invuln_timer -= delta
 	# Blink while immune: visible feedback that further hits won't land.
-	_body_visual.color = invuln_flash_color if int(_invuln_timer * 20.0) % 2 == 0 else _base_color
+	_set_body_tint(int(_invuln_timer * 20.0) % 2 == 0)
 	if _invuln_timer <= 0.0:
 		health.invulnerable = false
-		_body_visual.color = _base_color
+		_set_body_tint(false)
 
 func _on_died() -> void:
 	velocity = Vector2.ZERO
-	_body_visual.color = _base_color
+	_set_body_tint(false)
 	went_down.emit(character_def, global_position)
 
 ## Runtime character swap (debug tray / rescue flow). Resets cooldowns and
@@ -180,6 +250,8 @@ func set_character(def: CharacterDef) -> void:
 	if def != null:
 		health.max_half_hearts = def.max_half_hearts
 		_apply_placeholder_look(def)
+		_apply_art(def)
+		_set_body_tint(false)
 	health.reset_full()
 	health.invulnerable = false
 	speed_multiplier = 1.0
