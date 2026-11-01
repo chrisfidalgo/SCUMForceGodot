@@ -1,0 +1,46 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/combat/encounter_base.tscn" id="base"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="enemy"]
+[ext_resource type="PackedScene" path="res://scenes/structures/low_wall.tscn" id="low_wall"]
+[ext_resource type="PackedScene" path="res://scenes/structures/tall_wall.tscn" id="tall_wall"]
+[ext_resource type="Resource" path="res://resources/enemies/brawler.tres" id="d_brawler"]
+[ext_resource type="Resource" path="res://resources/enemies/lurker.tres" id="d_lurker"]
+[ext_resource type="Resource" path="res://resources/enemies/seeker.tres" id="d_seeker"]
+
+[node name="Level03OpenField" instance=ExtResource("base")]
+display_name = "Open Field"
+time_limit_sec = 60.0
+
+[node name="Structures" type="Node2D" parent="."]
+
+[node name="LowWallW" parent="Structures" instance=ExtResource("low_wall")]
+position = Vector2(130, 200)
+
+[node name="LowWallE" parent="Structures" instance=ExtResource("low_wall")]
+position = Vector2(510, 200)
+
+[node name="TallWall" parent="Structures" instance=ExtResource("tall_wall")]
+position = Vector2(320, 160)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="SeekerW" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(120, 80)
+def = ExtResource("d_seeker")
+
+[node name="SeekerE" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(520, 80)
+def = ExtResource("d_seeker")
+
+[node name="BrawlerA" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(250, 60)
+def = ExtResource("d_brawler")
+
+[node name="BrawlerB" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(400, 90)
+def = ExtResource("d_brawler")
+
+[node name="Lurker" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(320, 215)
+def = ExtResource("d_lurker")

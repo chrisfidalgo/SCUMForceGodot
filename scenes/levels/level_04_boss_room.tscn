@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/combat/encounter_base.tscn" id="base"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="enemy"]
+[ext_resource type="PackedScene" path="res://scenes/structures/low_wall.tscn" id="low_wall"]
+[ext_resource type="PackedScene" path="res://scenes/structures/platform.tscn" id="platform"]
+[ext_resource type="Resource" path="res://resources/enemies/bag_boss.tres" id="d_bag_boss"]
+[ext_resource type="Resource" path="res://resources/enemies/wanderer.tres" id="d_wanderer"]
+
+[node name="Level04BossRoom" instance=ExtResource("base")]
+display_name = "Boss Room"
+is_boss = true
+
+[node name="Structures" type="Node2D" parent="."]
+
+[node name="Platform" parent="Structures" instance=ExtResource("platform")]
+position = Vector2(500, 90)
+
+[node name="LowWallW" parent="Structures" instance=ExtResource("low_wall")]
+position = Vector2(150, 200)
+
+[node name="LowWallE" parent="Structures" instance=ExtResource("low_wall")]
+position = Vector2(490, 230)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="BagBoss" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(400, 110)
+def = ExtResource("d_bag_boss")
+
+[node name="WandererA" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(160, 100)
+def = ExtResource("d_wanderer")
+
+[node name="WandererB" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(300, 60)
+def = ExtResource("d_wanderer")

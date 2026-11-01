@@ -1,0 +1,62 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/combat/encounter_base.tscn" id="base"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="enemy"]
+[ext_resource type="Script" path="res://scenes/enemies/patrol_route.gd" id="route"]
+[ext_resource type="PackedScene" path="res://scenes/structures/low_wall.tscn" id="low_wall"]
+[ext_resource type="Resource" path="res://resources/enemies/patroller.tres" id="d_patroller"]
+[ext_resource type="Resource" path="res://resources/enemies/sentry.tres" id="d_sentry"]
+
+[node name="Level01Patrol" instance=ExtResource("base")]
+display_name = "Patrol Duty"
+
+[node name="Routes" type="Node2D" parent="."]
+
+[node name="RouteA" type="Node2D" parent="Routes"]
+script = ExtResource("route")
+
+[node name="Point1" type="Marker2D" parent="Routes/RouteA"]
+position = Vector2(80, 190)
+
+[node name="Point2" type="Marker2D" parent="Routes/RouteA"]
+position = Vector2(240, 190)
+
+[node name="RouteB" type="Node2D" parent="Routes"]
+script = ExtResource("route")
+
+[node name="Point1" type="Marker2D" parent="Routes/RouteB"]
+position = Vector2(400, 190)
+
+[node name="Point2" type="Marker2D" parent="Routes/RouteB"]
+position = Vector2(560, 190)
+
+[node name="Structures" type="Node2D" parent="."]
+
+[node name="LowWallW" parent="Structures" instance=ExtResource("low_wall")]
+position = Vector2(200, 125)
+
+[node name="LowWallE" parent="Structures" instance=ExtResource("low_wall")]
+position = Vector2(440, 125)
+
+[node name="LowWallMid" parent="Structures" instance=ExtResource("low_wall")]
+position = Vector2(320, 260)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="PatrollerA" parent="Enemies" node_paths=PackedStringArray("patrol_route") instance=ExtResource("enemy")]
+position = Vector2(80, 190)
+def = ExtResource("d_patroller")
+patrol_route = NodePath("../../Routes/RouteA")
+
+[node name="PatrollerB" parent="Enemies" node_paths=PackedStringArray("patrol_route") instance=ExtResource("enemy")]
+position = Vector2(400, 190)
+def = ExtResource("d_patroller")
+patrol_route = NodePath("../../Routes/RouteB")
+
+[node name="SentryW" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(200, 95)
+def = ExtResource("d_sentry")
+
+[node name="SentryE" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(440, 95)
+def = ExtResource("d_sentry")

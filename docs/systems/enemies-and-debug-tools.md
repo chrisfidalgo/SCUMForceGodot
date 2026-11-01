@@ -1,37 +1,23 @@
 # Enemies, the debug tray, and the HUD
 
-**Scripts:** `scenes/enemies/enemy.gd` (+ `enemy.tscn`),
+**Scripts:** `scenes/enemies/enemy.gd` (+ `enemy.tscn`), `resources/enemy_def.gd`,
 `scenes/ui/debug_tray.gd`, `scenes/ui/combat_hud.gd`,
-`scenes/combat/channel_overlay.gd`. Spec: `docs/plan/05-ENEMY-MODEL.md`.
+`scenes/combat/channel_overlay.gd`. Specs: `docs/plan/05-ENEMY-MODEL.md` and
+`docs/plan/06-ENEMY-BEHAVIOURS-AND-ENCOUNTERS.md`.
 
-## One scene, three behaviours
+## One scene, any behaviour
 
-`enemy.tscn` is a single scene with an `archetype` dropdown in the Inspector, the
-same way `TargetDummy` has an `elevation` dropdown. A Wanderer and a Seeker are
-the same scene with a different value — not two scripts.
-
-| | **Wanderer** | **Turret** | **Seeker** |
-|---|---|---|---|
-| Moves | random walk, reverses off walls | no | toward/away from you |
-| Attacks | no | yes, on a timer | yes, when in range |
-| Threat | body contact | lobbed shot (clears low walls) | flat shot (walls stop it) |
-| HP / speed | 2 / 40 | 2 / — | 3 / 55 |
-
-All numbers are placeholders and all are `@export`s.
-
-**The Turret does not track you.** It fires along `turret_facing_degrees`,
-authored in the Inspector. A turret you can walk around is a spatial puzzle; one
-that follows you is just pressure. Tracking is a dial we can add later, not the
-default.
-
-**The Seeker has no state machine.** One rule: further than `preferred_range_px`
-→ close; nearer than 75% of it → back off; in between → stand and fire. That
-alone produces "closes, then commits".
+`enemy.tscn` is a single scene; what an enemy *does* comes from an `EnemyDef`
+`.tres` file in `resources/enemies/` (when it wakes, how it moves, how it
+attacks, plus the numbers). Wanderer, Turret, Seeker, Sentry, Patroller,
+Brawler, Lurker and Bag Boss are all just different files. The full model, the
+preset table and how to make a new type are in **`enemy-behaviours.md`** - read
+that first; this page only covers the tools around enemies.
 
 There is deliberately **no pathfinding, no navmesh, and no behaviour tree.**
-Gain Ground's depth comes from placement and channels, not clever AI. If an
-archetype seems to need more, that is a finding worth reporting, not something to
-quietly build.
+Gain Ground's depth comes from placement and channels, not clever AI. If a
+behaviour seems to need more, that is a finding worth reporting, not something
+to quietly build.
 
 ## Enemies use the player's pipeline
 
@@ -39,7 +25,7 @@ An enemy does not have bespoke attack code. It emits `attack_fired` — the exac
 same signal the player emits — and the gym's `AttackSpawner` builds the
 projectile. Three consequences worth knowing:
 
-1. **Enemy attacks are `.tres` files** (`bag_shot.tres`, `bag_lob.tres`), tuned
+1. **Enemy attacks are `.tres` files** (`bag_shot.tres`, `bag_lob.tres`, `enemy_swipe.tres`), tuned
    in the Inspector like the player's.
 2. **Enemy shots obey the channel rules**, so structures block enemy fire exactly
    as they block yours. That is what makes a low wall into *cover* rather than
@@ -56,8 +42,8 @@ touch it; he has to lob.
 
 ### Live tuning
 
-Every enemy joins the `tunable` group, so its speed, cooldown, contact damage,
-preferred range and its whole attack show up in the **`` ` `` panel** while the
+Every enemy joins the `tunable` group, so the numbers that matter for its
+behaviour (speed, cooldown, wind-up, ranges) and its whole attack show up in the **`` ` `` panel** while the
 game runs. Retune a fight without leaving play mode — see
 `docs/systems/tuning-panel.md`.
 
@@ -67,19 +53,22 @@ Bottom-left panel, in the gym. Every action is both a hotkey and a button.
 
 | Key | Action |
 |---|---|
-| F1 | Spawn a Wanderer at a random edge |
-| F2 | Spawn a Turret |
-| F3 | Spawn a Seeker |
+| F1 | Spawn the **selected** enemy type at a random edge (a patroller goes on the gym's `PatrolRoute`) |
+| F2 | Select the next enemy type |
+| F3 | Select the previous enemy type |
 | F4 | Force the active character down |
 | F5 | Swap to the next roster character |
 | F6 | Reset: clear enemies, minis and projectiles, reset dummy counters, restore health |
 
+The type list is built at runtime from every `.tres` in `resources/enemies/`,
+so a new enemy file appears in the F2/F3 cycle with no code change.
+
 **Button-only:** *Channel overlay* and *Invincibility*.
 
 > **Why those two have no hotkey:** the input map is frozen after Phase 0, so
-> exactly six debug actions exist (`debug_1`..`debug_6`). Three spawns plus
-> down/swap/reset uses all six. If either earns a key during playtesting, that's
-> a request to unfreeze one input — not something to patch in locally.
+> exactly six debug actions exist (`debug_1`..`debug_6`). Spawn, two cycle keys
+> and down/swap/reset use all six. If either earns a key during playtesting,
+> that's a request to unfreeze one input - not something to patch in locally.
 
 The tray never implements a behaviour. It calls a `debug_*` method on the gym, so
 the rules stay in one place and the tray can drop into a future encounter scene
@@ -115,7 +104,8 @@ reads full when the attack is on cooldown and empties as it becomes ready, so
 
 ## The test that matters
 
-With an enemy spawned, stand behind the low wall on the left:
+With enemies spawned (F2 to pick a type, F1 to spawn), stand behind the low
+wall on the left:
 
 - A **Seeker's** flat shot is stopped by the wall. You are safe.
 - A **Turret's** lobbed shot arcs over it and lands on you. You are not.

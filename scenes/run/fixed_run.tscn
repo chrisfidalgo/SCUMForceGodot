@@ -1,0 +1,14 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scenes/run/fixed_run.gd" id="1_run"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_01_patrol.tscn" id="2_l1"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_02_gauntlet.tscn" id="3_l2"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_03_open_field.tscn" id="4_l3"]
+[ext_resource type="PackedScene" path="res://scenes/levels/level_04_boss_room.tscn" id="5_l4"]
+[ext_resource type="Resource" path="res://resources/characters/johnny.tres" id="6_johnny"]
+[ext_resource type="Resource" path="res://resources/characters/curt.tres" id="7_curt"]
+
+[node name="FixedRun" type="Node"]
+script = ExtResource("1_run")
+levels = [ExtResource("2_l1"), ExtResource("3_l2"), ExtResource("4_l3"), ExtResource("5_l4")]
+starting_roster = [ExtResource("6_johnny"), ExtResource("7_curt")]

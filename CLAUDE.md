@@ -30,14 +30,20 @@ canon folder — if you find a reference to one, it is stale.
 route onward. The real Splash → CharacterSelect flow is Phase 2 packet P2a and
 has not been built. This is expected, not a regression.
 
-**To play the gym: open `scenes/combat/gym.tscn` and press F6** ("run current
-scene"). That is the only playable thing in the project today.
+**Things you can play today (open the scene, press F6, "run current scene"):**
+
+- `scenes/run/fixed_run.tscn` — **the Wave 3 run**: four chained levels, pick a
+  character, reach the exit or clear the room, between-level cards, run-end card.
+  Enter continues/restarts. See `docs/systems/fixed-run.md`.
+- `scenes/levels/level_0N_*.tscn` — any single level standalone (uses its
+  `default_roster`).
+- `scenes/combat/gym.tscn` — the sandbox: never ends, debug tray (F1 spawn the
+  selected enemy, F2/F3 cycle the type), spawn any enemy preset.
 
 In the gym, press the **`` ` ``** key for the live tuning panel — sliders over
-the projectile/height knobs and the active character's attacks, plus a "log
-values" button that prints a snapshot to the console to copy back into the
-`.tres` files by hand. Swap characters via the player's `character_def` in the
-Inspector; there is no swap hotkey until P1g.
+the projectile/height knobs, the active character's attacks and every enemy
+type, plus a "log values" button that prints a snapshot to the console to copy
+back into the `.tres` files by hand. Swap characters with F5 in the gym.
 
 ## Verifying without opening the editor
 
@@ -92,11 +98,25 @@ playable loop, not a shooting range:
 - Debug tray (F1–F6), combat HUD, and the channel-visualisation overlay
   (**P1g**).
 
-**Next: the owner's core-feel playtest**, which the master plan gates Phase 2
-behind — *does Johnny feel meaningfully different from Curt, and do the channel
-rules read clearly?* Everything in Wave 2 exists to make that answerable. Tune
-via the Inspector and the in-play `` ` `` panel; nothing new should be built
-until that question has an answer.
+**Phase 1 Wave 3 is also done** (spec `docs/plan/06-ENEMY-BEHAVIOURS-AND-ENCOUNTERS.md`):
+
+- Enemies are data: an `EnemyDef` `.tres` picks activation (always / proximity),
+  idle and active movement (stationary / wander / patrol / seek) and attack
+  (none / melee / ranged, optional wind-up). Eight presets live in
+  `resources/enemies/` (**P1h**, `docs/systems/enemy-behaviours.md`).
+- `Encounter` (`scenes/combat/encounter.gd`) is the base every level shares:
+  pick-a-character, exit, going down, CLEARED / ESCAPED / LOST / TIMED_OUT, boss
+  rooms, timer. The gym is its sandbox flavour (**P1i**, `docs/systems/encounters.md`).
+- Four placeholder levels in `scenes/levels/` (inherited scenes of
+  `scenes/combat/encounter_base.tscn`) chained by `scenes/run/fixed_run.tscn`,
+  which owns `RunState` write-back, Time's Out removals and the between-level
+  cards (**P1j**, `docs/systems/fixed-run.md`).
+
+**Next: the owner's playtest.** Core feel (does Johnny feel meaningfully
+different from Curt, do the channel rules read clearly?) and now the run itself:
+rework the placeholder level layouts in the editor, tune the return-HP exports on
+`fixed_run.tscn`, and answer the open questions in spec 06 §7. Nothing new
+should be built until the playtest has answers.
 
 ## Conventions that bite if ignored
 

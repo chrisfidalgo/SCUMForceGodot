@@ -1,0 +1,51 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/combat/encounter_base.tscn" id="base"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="enemy"]
+[ext_resource type="PackedScene" path="res://scenes/structures/low_wall.tscn" id="low_wall"]
+[ext_resource type="PackedScene" path="res://scenes/structures/tall_wall.tscn" id="tall_wall"]
+[ext_resource type="Resource" path="res://resources/enemies/sentry.tres" id="d_sentry"]
+[ext_resource type="Resource" path="res://resources/enemies/turret.tres" id="d_turret"]
+
+[node name="Level02Gauntlet" instance=ExtResource("base")]
+display_name = "Turret Gauntlet"
+
+[node name="Structures" type="Node2D" parent="."]
+
+[node name="LowWall1" parent="Structures" instance=ExtResource("low_wall")]
+position = Vector2(150, 230)
+
+[node name="LowWall2" parent="Structures" instance=ExtResource("low_wall")]
+position = Vector2(490, 230)
+
+[node name="LowWall3" parent="Structures" instance=ExtResource("low_wall")]
+position = Vector2(320, 150)
+
+[node name="TallWall1" parent="Structures" instance=ExtResource("tall_wall")]
+position = Vector2(320, 250)
+
+[node name="Enemies" type="Node2D" parent="."]
+
+[node name="LobberW" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(24, 250)
+def = ExtResource("d_turret")
+facing_degrees = 0
+
+[node name="LobberE" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(616, 190)
+def = ExtResource("d_turret")
+facing_degrees = 180
+
+[node name="LobberTopW" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(120, 50)
+def = ExtResource("d_turret")
+facing_degrees = 90
+
+[node name="LobberTopE" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(520, 50)
+def = ExtResource("d_turret")
+facing_degrees = 90
+
+[node name="SentryMid" parent="Enemies" instance=ExtResource("enemy")]
+position = Vector2(320, 110)
+def = ExtResource("d_sentry")
