@@ -15,11 +15,17 @@ extends CanvasLayer
 
 const HEART_PX := 9
 const HEART_GAP := 2
+## Portrait box beside the hearts (screen px at 640x360) and the gap after it.
+const PORTRAIT_PX := 40.0
+const PORTRAIT_GAP_PX := 4.0
 
 var _player: Player = null
 var _gym: Node = null
 
 var _hearts: Control = null
+var _portrait_rect: TextureRect = null
+var _portrait_fallback: ColorRect = null
+var _portrait_def: CharacterDef = null
 var _name_label: Label = null
 var _primary_bar: ProgressBar = null
 var _secondary_bar: ProgressBar = null
@@ -67,6 +73,8 @@ func _process(_delta: float) -> void:
 	# Cooldowns are continuous; a signal per frame would be worse than polling.
 	_primary_bar.value = _player.primary_cooldown_ratio() * 100.0
 	_secondary_bar.value = _player.secondary_cooldown_ratio() * 100.0
+	if _player.character_def != _portrait_def:
+		_refresh_portrait()
 	var name_text: String = _player.character_def.display_name if _player.character_def else "?"
 	if _player.health.is_dead():
 		name_text += "  — DOWN (F5 to swap)"
@@ -135,6 +143,22 @@ func _build_ui() -> void:
 	root.position = Vector2(8, 6)
 	add_child(root)
 
+	_portrait_fallback = ColorRect.new()
+	_portrait_fallback.size = Vector2(PORTRAIT_PX, PORTRAIT_PX)
+	root.add_child(_portrait_fallback)
+	_portrait_rect = TextureRect.new()
+	_portrait_rect.size = Vector2(PORTRAIT_PX, PORTRAIT_PX)
+	_portrait_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_portrait_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	root.add_child(_portrait_rect)
+	_refresh_portrait()
+
+	# Everything else sits to the right of the portrait.
+	var info := Control.new()
+	info.position = Vector2(PORTRAIT_PX + PORTRAIT_GAP_PX, 0)
+	root.add_child(info)
+	root = info
+
 	_hearts = Control.new()
 	_hearts.position = Vector2(0, 0)
 	root.add_child(_hearts)
@@ -166,6 +190,17 @@ func _build_ui() -> void:
 			HORIZONTAL_ALIGNMENT_CENTER)
 	_banner.visible = false
 	add_child(_banner)
+
+
+## Show the active character's portrait, or their placeholder colour if none.
+func _refresh_portrait() -> void:
+	_portrait_def = _player.character_def
+	var tex: Texture2D = _portrait_def.portrait if _portrait_def else null
+	_portrait_rect.texture = tex
+	# Pixel-art portraits that get enlarged stay crisp; big ones shrunk down smooth.
+	_portrait_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST 			if tex != null and tex.get_width() <= PORTRAIT_PX else CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	_portrait_fallback.color = _portrait_def.placeholder_color if _portrait_def else Color(0.3, 0.3, 0.3)
+	_portrait_fallback.visible = tex == null
 
 
 func _wide_label(pos: Vector2, width: float, font_size: int, color: Color,

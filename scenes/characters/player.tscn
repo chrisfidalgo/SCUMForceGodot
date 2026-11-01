@@ -24,6 +24,10 @@ shape = SubResource("CircleShape2D_1")
 color = Color(0.3, 0.55, 0.9, 1)
 polygon = PackedVector2Array(6, 0, 4.24, 4.24, 0, 6, -4.24, 4.24, -6, 0, -4.24, -4.24, 0, -6, 4.24, -4.24)
 
+[node name="WalkSprite" type="Sprite2D" parent="."]
+visible = false
+texture_filter = 1
+
 [node name="FacingIndicator" type="Line2D" parent="."]
 points = PackedVector2Array(0, 0, 0, -16)
 width = 2.0
